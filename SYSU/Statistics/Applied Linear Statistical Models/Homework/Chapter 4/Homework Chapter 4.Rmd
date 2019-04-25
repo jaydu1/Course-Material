@@ -1,0 +1,180 @@
+---
+title: "Homework Chapter 4"
+author: "Jinhong Du 15338039"
+output:
+  html_document:
+    code_folding: hide
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+---
+
+### 4.4 Refer to **Airfreight breakage** Problem 1.21.
+#### (b) Obtain Bonferroni joint confidence intervals for $\beta_0$ and $\beta_1$, using a $99$ percent family confidence coefficient. Interpret your confidence intervals.
+
+The $100(1-\alpha)\%$ Bonferroni joint confidence intervals for joint estimation of $\beta_0,\beta_1$ is given by
+\begin{align*}
+(b_0-Bs\{b_0\},b_0+Bs\{b_0\})\\
+(b_1-Bs\{b_1\},b_1+Bs\{b_1\})
+\end{align*}
+where 
+$$B=t\left(1-\frac{\alpha}{4};n-2\right)$$
+
+```{r}
+library(ggplot2)
+library(gridExtra)
+data1 <- read.table("CH01PR21.txt",head=FALSE,col.names = c('Y','X'))
+X = data1$X
+Y = data1$Y
+fit <- lm('Y~X',data1)
+summary(fit)
+lm.scatter <- ggplot(data1, aes(x=X, y=Y)) + 
+  geom_point(color='#2980B9', size = 4) + xlim(c(0, 3)) + 
+  geom_smooth(method = lm, se=FALSE, fullrange=TRUE, color='#2C3E50', size=1.1) + 
+  labs(title='Y~X')
+grid.arrange(lm.scatter)
+df = fit$df.residual
+n = length(X)
+mse <- sum((Y - fit$fitted.values)^2) / (n - 2)
+sb1 <- sqrt(mse/sum((X-mean(X))^2))
+sb0 <-sqrt(mse*(1/n+mean(X)^2/sum((X-mean(X))^2)))
+b0 <- fit$coefficients[1]
+b1 <- fit$coefficients[2]
+B <- qt(1-0.01/(2 * 2), df)
+print(sprintf("B = %f",B))
+print(sprintf("The confidence interval for beta0 is (%f,%f)",b0-B*sb0,b0+B*sb0))
+print(sprintf("The confidence interval for beta1 is (%f,%f)",b1-B*sb1,b1+B*sb1))
+library(investr)
+plotFit(fit, interval = 'confidence', k = 0.95, adjust = 'Bonferroni', 
+        main = 'Bonferroni Y ~ X')
+```
+
+### 4.8 Refer to **Airfreight breakage** Problem 1.21.
+#### (a) It is desired to obtain interval estimates of the mean number of broken ampules when there are 0,1 and 2 transfers for a shipment, using a 95 percent family confidence coefficient. Obtain the desired confidence intervals, using the Working-Hotelling procedure.
+
+The $100(1-\alpha)\%$ Working-Hotelling confidence intervals for mean response $\mathbb{E}Y_h$ is given by
+$$(\hat{Y}_h-Ws\{\hat{Y}_h\},\hat{Y}_h+Ws\{\hat{Y}_h\})$$
+where $$W=\sqrt{2F(1-\alpha;2,n-2)}$$
+```{r}
+W <- sqrt(2 * qf(p = 0.95, df1 = 2, df2 = n - 2))
+print(sprintf("W = %f",W))
+for (i in c(0:2)){
+  Xh <- data.frame(X=i)
+  Yh <- predict(fit,Xh)
+  sYh <- sqrt(mse*(1/n+(Xh-mean(X))^2/sum((X-mean(X))^2)))
+  print(
+    sprintf(
+      "The Working-Hotelling confidence interval for Xh=%d is (%f,%f)",
+      i,Yh-W*sYh,Yh+W*sYh))
+}
+```
+
+#### (b) Are the confidence intervals obtained in part (a) more efficient than Bonferroni intervals here? Explain.
+The $100(1-\alpha)\%$ Bonferroni confidence intervals for mean response $\mathbb{E}Y_h$ is given by
+$$(\hat{Y}_h-Bs\{\hat{Y}_h\},\hat{Y}_h+Bs\{\hat{Y}_h\})$$
+where 
+$$B=t\left(1-\frac{\alpha}{4};n-2\right)$$
+```{r}
+B <- qt(1-0.05/(2 * 3), df)
+print(sprintf("B = %f",B))
+for (i in c(0:2)){
+  Xh <- data.frame(X=i)
+  Yh <- predict(fit,Xh)
+  sYh <- sqrt(mse*(1/n+(Xh-mean(X))^2/sum((X-mean(X))^2)))
+  print(
+    sprintf(
+      "The Working-Hotelling confidence interval for Xh=%d is (%f,%f)",
+      i,Yh-B*sYh,Yh+B*sYh))
+}
+```
+The confidence intervals obtained in part (a) are more efficient than Bonferroni intervals here since $B>W$.
+
+### 4.16 Refer to **Copier maintenance** Problem 1.20. 
+#### (a) Obtain the estimated regression function. 
+```{r}
+data2 <- read.table("CH01PR20.txt",head=FALSE,col.names = c('Y','X'))
+X2 <- data2$X
+Y2 <- data2$Y
+fit2 <- lm('Y~X',data2)
+summary(fit2)
+lm.scatter <- ggplot(data2, aes(x=X, y=Y)) + 
+  geom_point(color='#2980B9', size = 4)+ 
+  geom_smooth(method = lm, se=FALSE, fullrange=TRUE, color='#2C3E50', size=1.1) + 
+  labs(title='Y~X')
+grid.arrange(lm.scatter)
+```
+Since $P$-value of testing $H_0:\beta_0=0\qquad H_a:\beta_0\neq 0$ is $0.837$, accept $H_0$. Therefore, we should do the regression through origin.
+```{r}
+fit2 <- lm('Y~0+X',data2)
+summary(fit2)
+
+lm.scatter <- ggplot(data2, aes(x=X, y=Y)) + 
+  geom_point(color='#2980B9', size = 4) + xlim(c(0, 10)) + 
+  geom_abline(intercept=0, slope=fit2$coefficients[1], color='#2C3E50', size=1.1) + 
+  labs(title='Regression through the Origin')
+grid.arrange(lm.scatter)
+```
+
+
+
+the regression function is $$y=15.0352x$$
+
+#### (b) Estimate $\beta_1$, with a 90 percent confidence interval. Interpret your interval estrmate.
+The $1-\alpha$ confidence interval of $\beta_1$ is given by
+$$\left(b_1-t\left(1-\frac{\alpha}{2}\right)s\{b_0\},b_0+t\left(1-\frac{\alpha}{2}\right)s\{b_0\}\right)$$
+where
+$$s\{b_1\}=\sqrt{\dfrac{MSE}{SS_{XX}}}$$
+```{r}
+df2 = fit2$df.residual
+n2 = length(X2)
+mse2 <- sum((Y2 - fit2$fitted.values)^2) / df2
+sb12 <- sqrt(mse2/sum(X2^2))
+b1 <- fit2$coefficients[1]
+t = qt(p = 0.95, df = df2)
+print(sprintf("The confidence interval for beta1 is (%f,%f)",b1-t*sb12,b1+t*sb12))
+```
+
+
+#### (c) Predict the service time on a new call in which six copiers are to be serviced. Use a 90 percent prediction interval.
+The $1-\alpha$ prediction interval of $Y_{h(new)}$ is given by
+$$\left(\hat{Y}_h-t\left(1-\frac{\alpha}{2};n-1\right)s\{pred\},\hat{Y}_h+t\left(1-\frac{\alpha}{2};n-1\right)s\{pred\}\right)$$
+where
+$$s\{pred\}=\sqrt{MSE\left(1+\dfrac{X_h^2}{SS_{XX}}\right)}$$
+```{r}
+Xh <- data.frame(X=6)
+pred_Yh <- predict(fit2,Xh)
+s_pred <- sqrt(mse2*(1+Xh^2/sum(X2^2)))
+print(sprintf("The prediction interval for Yh(new) is (%f,%f)",pred_Yh-t*s_pred,pred_Yh+t*s_pred))
+```
+
+### 4.17 Refer to **Copier maintenance** Problem 4.16. 
+#### (c) Conduct a formal test for lack of fit of linear regression through the origin; use $\alpha = .01$. State the alternatives, decision rule, and conclusion. What is the P-value of the test?
+
+$$H_0:\mathbb{E}Y=\beta_1X\qquad H_a:\mathbb{E}Y\neq\beta_1X$$
+The decision rule is: If $F^*\leqslant 2.963012$, then conclude $H_0$, otherwise conclude $H_a.$
+
+Here, $F^*=0.864779$, conclude $H_0$.
+\begin{align*}
+Pvalue&= \mathbb{P}\{H_a\text{ holds}\}\\
+&=\mathbb{P}\{F(9,35)>F^*\}\\
+&=1-\mathbb{P}\{F(9,35)\leqslant F^*\}\\
+&=0.564434
+\end{align*}
+```{r}
+level = length(unique(data2$X))
+n2 = length(data2$X)
+SSER = sum(fit2$residuals^2)
+SSEF = 0
+for (i in unique(data2$X)) {
+  SSEF <- SSEF + sum((data2[data2$X==i,]$Y-mean(data2[data2$X==i,]$Y))^2)
+}
+Fvalue = (SSER-SSEF)/(level-n2+df2)/(SSEF/(n2-level))
+Pvalue = 1-pf(Fvalue,df1=level-n2+df2,df2=n2-level)
+print(sprintf('SSE of Reduced Model :%f',SSER))
+print(sprintf('SSE of Full Model    :%f',SSEF))
+print(sprintf('F-value              :%f',Fvalue))
+print(sprintf('0.99 Quantile F(%d,%d) value:%f',
+              level-n2+df2,n2-level,qf(0.99,level-n2+df2,n2-level)))
+print(sprintf('P-value              :%f',Pvalue))
+```
+

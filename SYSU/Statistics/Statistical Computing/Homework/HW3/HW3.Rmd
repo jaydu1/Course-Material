@@ -1,0 +1,840 @@
+---
+title: "HW3"
+author:
+  - 杜金鸿 15338039
+documentclass: ctexart
+output:
+  rticles::ctex:
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+    keep_tex: yes
+classoption: "hyperref,"
+---
+
+```{r}
+library(ggplot2)
+library(reshape2)
+library(latex2exp)
+set.seed(1)
+n <- 100
+T_ <- 10
+X1 <- matrix(rnorm(n*T_),n,T_)
+X2 <- matrix(rnorm(n*T_),n,T_)
+generate_data <- function(X1,
+                          X2,
+                          n = 100,
+                          T_ = 10,
+                          beta1 = 1,
+                          beta2 = 5,
+                          pi1 = 0.6,
+                          sigma1 = 2,
+                          sigma2 = 10){
+    Z1 <- rnorm(n,0,sigma1)
+    Z2 <- rnorm(n,0,sigma2)
+    U <- 2 - rbinom(n,1,pi1)
+    x <- ifelse(matrix(U,n,T_)==1, beta1*X1+matrix(Z1,n,T_), beta2*X2+matrix(Z2,n,T_))
+    P <- exp(x)/(1+exp(x))
+    Y <- ifelse(matrix(runif(n*T_),n,T_)<P, 1, 0)
+    return(list(Y, Z1, Z2, U))
+}
+alldata <- generate_data(X1,X2)
+Y <- alldata[[1]]
+Z1 <- alldata[[2]]
+Z2 <- alldata[[3]]
+U <- alldata[[4]]
+```
+
+
+```{r}
+eta <- data.frame(t(ifelse(matrix(U,n,T_)==1,1*X1,5*X2) + matrix(ifelse(U==1,Z1,Z2),n,T_)))
+eta['t'] <- c(1:10)
+U_kind <- as.integer(rep(U,each=10))
+ggplot(data = melt(eta,id = 't',variable.name="parameter") , 
+       aes(x=t, y=value, colour= U_kind)) + 
+    geom_point()+
+    labs(title=TeX("Distribution of $\\beta_{c}X_{c,ij}+Z_{c,i}$ over $T$"), x = 'T', y = 'Value')
+```
+
+
+
+
+```{r}
+real_parameters <- function(X1,X2,Y,Z1,Z2,U,
+                            n = 100,
+                            T_ = 10){
+    real_pi1 <- sum(U==1) / n
+    real_sigma1 <- sqrt(mean(Z1[U==1]^2))
+    real_sigma2 <- sqrt(mean(Z2[U==2]^2))
+    epi <- 1
+    real_beta1 <- 2
+    while (epi>1e-3) {
+        f2 <- sum(apply(X1^2 * exp(real_beta1 * X1 + matrix(Z1, n, T_)) /
+                    (1 + exp(real_beta1 * X1 + matrix(Z1, n, T_)))^2, 1, sum)[U==1])
+        if (f2==0) {
+            break
+        }
+        new_beta1 <- real_beta1 + sum(apply(X1 * (Y - 1 + 1 / 
+                    (1 + exp(real_beta1 * X1 + matrix(Z1, n, T_)))), 1, sum)[U==1]) / f2
+        epi <- abs(new_beta1 - real_beta1)
+        real_beta1 <- new_beta1
+    }
+    epi <- 1
+    real_beta2 <- 2
+    while (epi>1e-3) {
+        f2 <- sum(apply(X2^2 * exp(real_beta2 * X2 + matrix(Z2, n, T_)) /
+                     (1 + exp(real_beta2 * X2 + matrix(Z2, n, T_)))^2, 1, sum)[U==2])
+        if (f2==0) {
+            break
+        }
+        new_beta2 <- real_beta2 + sum(apply(X2 * (Y - 1 + 1 / 
+                  (1 + exp(real_beta2 * X2 + matrix(Z2, n, T_)))), 1, sum)[U==2]) / f2
+        epi <- abs(new_beta2 - real_beta2)
+        real_beta2 <- new_beta2
+    }
+    return(list(real_pi1,real_beta1,real_beta2,real_sigma1,real_sigma2))
+}
+# cat(real_pi1,'\n')
+# cat(real_beta1,'\n')
+# cat(real_beta2,'\n')
+# cat(real_sigma1,'\n')
+# cat(real_sigma2,'\n')
+```
+
+
+## Metropolis-Hastings Algorithm
+```{r}
+MH <- function(beta1,
+               beta2,
+               X1,
+               X2,
+               Y,
+               K = 500,
+               burnin = 100,
+               n = 100,
+               T_ = 10,
+               sigma1 = 2,
+               sigma2 = 10){
+    Z1 <- rnorm(n, 0, sigma1)
+    Z2 <- rnorm(n, 0, sigma2)
+    
+    Z1_MH <- matrix(0, n, K+burnin)
+    Z2_MH <- matrix(0, n, K+burnin)
+    for (i in c(1:(K+burnin))) {
+         newZ1 <- rnorm(n, 0, sigma1)
+         A1 <- apply(Y, 1, sum) * (newZ1 - Z1) + apply(
+             log(1 +  exp(beta1 * X1 + matrix(Z1, n, T_))) - 
+                 log(1 + exp(beta1 * X1 + matrix(newZ1, n, T_))), 1, sum)
+         Z1 <- ifelse(log(runif(n))>A1, Z1, newZ1)
+         Z1_MH[,i] <- Z1
+         
+         newZ2 <- rnorm(n, 0, sigma2)
+         A2 <- apply(Y, 1, sum) * (newZ2 - Z2) + apply(
+             log(1 + exp(beta2 * X2 + matrix(Z2, n, T_))) - 
+                 log(1 + exp(beta2 * X2 + matrix(newZ2, n, T_))), 1, sum)
+         Z2 <- ifelse(log(runif(n))>A2, Z2, newZ2)
+         Z2_MH[,i] <- Z2
+    }
+    
+    Z1 <- Z1_MH[,burnin]
+    Z2 <- Z2_MH[,burnin]
+    Z1_MH <- Z1_MH[,-c(1:burnin)]
+    Z2_MH <- Z2_MH[,-c(1:burnin)]
+    return(list(Z1, Z2, Z1_MH, Z2_MH))
+}
+```
+
+
+## Gibbs Sampling
+```{r}
+Gibbs <- function(pi1,
+                  beta1,
+                  beta2,
+                  sigma1,
+                  sigma2,
+                  X1,
+                  X2,
+                  Y,
+                  K = 500,
+                  burnin = 100,
+                  n = 100,
+                  T_ = 10){
+    U_list <- matrix(0, nrow = n, ncol = K)
+    
+    
+    Z_MH <- MH(beta1, beta2, X1, X2, Y, K = 500, burnin = 500)
+    Z1 <- Z_MH[[1]]
+    Z2 <- Z_MH[[2]]
+    Z1_list <- Z_MH[[3]]
+    Z2_list <- Z_MH[[4]]
+    
+    U <- 2 - rbinom(n, 1, 0.6)
+    for (i in c(1:K)) {
+         P1 <- exp(beta1 * X1 + matrix(ifelse(U==1, Z1, Z2), n, T_)) / 
+             (1 + exp(beta1 * X1 + matrix(ifelse(U==1, Z1, Z2), n, T_)))
+         P2 <- exp(beta2 * X2 + matrix(ifelse(U==1, Z1, Z2), n, T_)) / 
+             (1 + exp(beta2 * X2 + matrix(ifelse(U==1, Z1, Z2), n, T_)))
+         fU1 <- pi1 * dnorm(ifelse(U==1, Z1, Z2), 0, sigma1) * 
+             apply(ifelse(Y==1, P1, 1-P1), 1, prod)
+         fU2 <- (1 - pi1) * dnorm(ifelse(U==1, Z1, Z2), 0, sigma2) * 
+             apply(ifelse(Y==1, P2, 1-P2), 1, prod)
+         U <- ifelse(runif(n) < (fU1 / (fU1 + fU2)), 1, 2)
+         U_list[,i] <- U
+         Z1 <- Z1_list[,i]
+         Z2 <- Z2_list[,i]
+    }
+    U_list <- U_list[,-c(1:burnin)]
+    Z1_list <- Z1_list[,-c(1:burnin)]
+    Z2_list <- Z2_list[,-c(1:burnin)]
+    
+    return(list(U_list, Z1_list, Z2_list))
+}
+```
+
+
+```{r}
+MCEM <- function(pi1,
+                 beta1,
+                 beta2,
+                 sigma1,
+                 sigma2,
+                 epsilon0,
+                 X1,
+                 X2,
+                 Y,
+                 K = 500,
+                 burnin = 100,
+                 m = K - burnin,
+                 n = 100,
+                 T_ = 10,
+                 is_plot = F){
+    beta1_list <- c(beta1)
+    beta2_list <- c(beta2)
+    sigma1_list <- c(sigma1)
+    sigma2_list <- c(sigma2)
+    pi1_list <- c(pi1)
+    
+    step <- 1
+    epsilon <- 1e10
+    while (epsilon > epsilon0) {
+        gibbs <- Gibbs(pi1, beta1, beta2, sigma1, sigma2, X1, X2, Y)
+        U_list <- gibbs[[1]]
+        Z1_list <- gibbs[[2]]
+        Z2_list <- gibbs[[3]]
+        
+        # Update parameters
+        pi1 <- sum(U_list==1)/m/n
+        sigma1 <- sqrt(mean(Z1_list[U_list==1]^2))
+        sigma2 <- sqrt(mean(Z2_list[U_list==2]^2))
+        epi <- 1
+        beta1 <- 1
+        while (epi>1e-3) {
+            f2 <- sum(apply(Z1_list, 2, function(z){apply(
+                X1^2 * exp(beta1 * X1 + matrix(z, n, T_)) / 
+                    (1 + exp(beta1 * X1 + matrix(z, n, T_)))^2, 1, sum)})[U_list==1])
+            if (f2==0) {
+                break
+            }
+            new_beta1 <- beta1 + sum(apply(Z1_list, 2, function(z){apply(X1 * 
+                        (Y - 1 + 1 / (1 + exp(beta1 * X1 + 
+                        matrix(z, n, T_)))), 1, sum)})[U_list==1]) / f2
+            epi <- abs(new_beta1 - beta1)
+            beta1 <- new_beta1
+        }
+        epi <- 1
+        beta2 <- 5
+        while (epi>1e-3) {
+            f2 <- sum(apply(Z2_list, 2, function(z){apply(X2^2 * 
+                    exp(beta2 * X2 + matrix(z, n, T_)) / (1 + 
+                    exp(beta2 * X2 + matrix(z, n, T_)))^2, 1, sum)})[U_list==2])
+            if (f2==0) {
+                break
+            }
+            new_beta2 <- beta2 + sum(apply(Z2_list, 2, function(z){apply(X2 * 
+                        (Y - 1 + 1 / (1 + exp(beta2 * X2 + 
+                        matrix(z, n, T_)))), 1, sum)})[U_list==2]) / f2
+            epi <- abs(new_beta2 - beta2)
+            beta2 <- new_beta2
+        }
+        
+        epsilon <- max( abs(beta1 - beta1_list[step])/(abs(beta1_list[step]) + 1e-12),
+                        abs(beta2 - beta2_list[step])/(abs(beta2_list[step]) + 1e-12),
+                        abs(sigma1 - sigma1_list[step])/(abs(sigma1_list[step]) + 1e-12),
+                        abs(sigma2 - sigma2_list[step])/(abs(sigma2_list[step]) + 1e-12),
+                        abs(pi1 - pi1_list[step])/(abs(pi1_list[step]) + 1e-12))
+        
+        beta1_list[step+1] <- beta1
+        beta2_list[step+1] <- beta2
+        sigma1_list[step+1] <- sigma1
+        sigma2_list[step+1] <- sigma2
+        pi1_list[step+1] <- pi1
+        step <- step + 1
+    }
+    if (is_plot) {
+        result <- data.frame(pi1=pi1_list,
+                             beta1=beta1_list,
+                             beta2 = beta2_list, 
+                             sigma1 = sigma1_list,
+                             sigma2 = sigma2_list, 
+                             t=c(1:length(pi1_list)))
+        print(ggplot(data = melt(result,id = 't',variable.name="parameter") , 
+               aes(x=t, y=value, colour=parameter)) + 
+            geom_line()+
+            coord_cartesian(ylim=c(0, 11)) + 
+            theme_bw() + 
+            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+            scale_y_continuous(breaks=seq(0, 11, 1))+
+            labs(title="Parameter Estimated by MCEM", x = 'iteration', y = 'Value'))
+    }
+    return(list(pi1, beta1, beta2, sigma1, sigma2))
+}
+# a <- MCEM(0.5,1.5,3,4,11,2.5*1e-2,X1,X2,Y,is_plot = T)
+```
+
+
+```{r}
+pi1_grid <- c(0.3,0.4,0.5,0.6,0.7)
+beta1_grid <- c(0,0.5,1,1.5,2)
+beta2_grid <- c(4,4.5,5,5.5,6)
+sigma1_grid <- c(2,5,8)
+sigma2_grid <- c(2,5,8)
+```
+
+
+
+## MCEM
+```{r}
+N <- 100
+time_list <- c(1:N)
+pi1_list <- c(1:N)
+beta1_list <- c(1:N)
+beta2_list <- c(1:N)
+sigma1_list <- c(1:N)
+sigma2_list <- c(1:N)
+real_pi1_list <- c(1:N)
+real_beta1_list <- c(1:N)
+real_beta2_list <- c(1:N)
+real_sigma1_list <- c(1:N)
+real_sigma2_list <- c(1:N)
+for(i in c(1:N)){
+    t_start <- Sys.time()
+    alldata <- generate_data(X1,X2)
+    Y <- alldata[[1]]
+    Z1 <- alldata[[2]]
+    Z2 <- alldata[[3]]
+    U <- alldata[[4]]
+    parameters <- real_parameters(X1,X2,Y,Z1,Z2,U)
+    real_pi1_list[i] <- parameters[[1]]
+    real_beta1_list[i] <- parameters[[2]]
+    real_beta2_list[i] <- parameters[[3]]
+    real_sigma1_list[i] <- parameters[[4]]
+    real_sigma2_list[i] <- parameters[[5]]
+    # Initialization 1
+    # parameters <- tryCatch(MCEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y),
+    #                        error = function(e){0*c(1:5)})
+    # Initialization 2
+    # parameters <- tryCatch(MCEM(0.5,3,3,5,5,2.5*1e-2,X1,X2,Y),
+    #                        error = function(e){0*c(1:5)})
+    # Initialization 3
+    # pi1 <- sample(pi1_grid,1)
+    # beta1 <- sample(beta1_grid,1)
+    # beta2 <- sample(beta2_grid,1)
+    # sigma1 <- sample(sigma1_grid,1)
+    # sigma2 <- sample(sigma2_grid,1)
+    # parameters <- MCEM(pi1,beta1,beta2,sigma1,sigma2,2.5*1e-2,X1,X2,Y)
+    t_end <- Sys.time()
+
+    time_list[i] <- t_end - t_start
+    pi1_list[i] <- parameters[[1]]
+    beta1_list[i] <- parameters[[2]]
+    beta2_list[i] <- parameters[[3]]
+    sigma1_list[i] <- parameters[[4]]
+    sigma2_list[i] <- parameters[[5]]
+}
+```
+
+```{r}
+# MSE
+cat(mean((pi1_list - real_pi1_list)^2),'\t&\t')
+cat(mean((beta1_list - real_beta1_list)^2),'\t&\t')
+cat(mean((beta2_list - real_beta2_list)^2),'\t&\t')
+cat(mean((sigma1_list - real_sigma1_list)^2),'\t&\t')
+cat(mean((sigma2_list - real_sigma2_list)^2),'\t&\t')
+
+# Mean Time
+cat(mean(time_list),'\n')
+```
+
+## LTEM
+```{r}
+LTEM <- function(pi1,
+                 beta1,
+                 beta2,
+                 sigma1,
+                 sigma2,
+                 epsilon0,
+                 X1,
+                 X2,
+                 Y,
+                 K = 500,
+                 burnin = 100,
+                 m = K - burnin,
+                 n = 100,
+                 T_ = 10,
+                 is_plot = F){
+    beta1_list <- c(beta1)
+    beta2_list <- c(beta2)
+    sigma1_list <- c(sigma1)
+    sigma2_list <- c(sigma2)
+    pi1_list <- c(pi1)
+
+    step <- 1
+    epsilon <- 1e10
+    while (epsilon > epsilon0) {
+        gibbs <- Gibbs(pi1, beta1, beta2, sigma1, sigma2, X1, X2, Y,K,burnin)
+        U_list <- gibbs[[1]]
+        Z1_list <- gibbs[[2]]
+        Z2_list <- gibbs[[3]]
+        
+        # Update parameters
+        pi1 <- sum(U_list==1)/m/n
+        sigma1 <- sqrt(mean(Z1_list[U_list==1]^2))
+        sigma2 <- sqrt(mean(Z2_list[U_list==2]^2))
+        
+        epi <- 1
+        beta1 <- 1
+        while (epi>1e-3) {
+            f2 <- sum(apply(Z1_list, 2, function(z){apply(X1^2 * 
+                    exp(beta1 * X1 + matrix(z, n, T_)) / (1 + 
+                    exp(beta1 * X1 + matrix(z, n, T_)))^2, 1, sum)})[U_list==1])
+            if (f2==0) {
+                break
+            }
+            new_beta1 <- beta1 + sum(apply(Z1_list, 2, function(z){apply(X1 * 
+                        (Y - 1 + 1 / (1 + exp(beta1 * X1 + 
+                        matrix(z, n, T_)))), 1, sum)})[U_list==1]) / f2
+            epi <- abs(new_beta1 - beta1)
+            beta1 <- new_beta1
+        }
+        epi <- 1
+        beta2 <- 5
+        while (epi>1e-3) {
+            f2 <- sum(apply(Z2_list, 2, function(z){apply(X2^2 * 
+                    exp(beta2 * X2 + matrix(z, n, T_)) / (1 + 
+                    exp(beta2 * X2 + matrix(z, n, T_)))^2, 1, sum)})[U_list==2])
+            if (f2==0) {
+                break
+            }
+            new_beta2 <- beta2 + sum(apply(Z2_list, 2, function(z){apply(X2 * 
+                        (Y - 1 + 1 / (1 + exp(beta2 * X2 + 
+                        matrix(z, n, T_)))), 1, sum)})[U_list==2]) / f2
+            epi <- abs(new_beta2 - beta2)
+            beta2 <- new_beta2
+        }
+        if(step>2){
+
+            H2 <- -mean((apply(Z1_list, 2, function(z){apply(X1 * 
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)))), 1, sum)})[U_list==1])^2)
+                + mean(apply(Z1_list, 2, function(z){apply(X1 *   
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)))), 1, sum)})[U_list==1])^2
+            Q2 <- - mean(apply(Z1_list, 2, function(z){apply(X1^2 * 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)) / (1 + 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)))^2, 1, sum)})[U_list==1])
+            if ((H2+Q2)!=0) {
+                beta1 <- beta1_list[step] + Q2/(H2+Q2)*(beta1 - beta1_list[step])
+            }
+            H2 <- - mean((apply(Z2_list, 2, function(z){apply(X2 * 
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)))), 1, sum)})[U_list==2])^2)
+                 + mean(apply(Z2_list, 2, function(z){apply(X2 * 
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)))), 1, sum)})[U_list==2])^2
+            Q2 <- - mean(apply(Z2_list, 2, function(z){apply(X2^2 * 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)) / (1 + 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)))^2, 1, sum)})[U_list==2])
+            if ((H2+Q2)!=0) {
+                beta2 <- beta2_list[step] + Q2/(H2+Q2)* 
+                    (beta2 - beta2_list[step])    
+            }
+        }   
+        epsilon <- max( abs(beta1 - beta1_list[step])/(abs(beta1_list[step]) + 1e-12),
+                        abs(beta2 - beta2_list[step])/(abs(beta2_list[step]) + 1e-12),
+                        abs(sigma1 - sigma1_list[step])/(abs(sigma1_list[step]) + 1e-12),
+                        abs(sigma2 - sigma2_list[step])/(abs(sigma2_list[step]) + 1e-12),
+                        abs(pi1 - pi1_list[step])/(abs(pi1_list[step]) + 1e-12))
+        
+        beta1_list[step+1] <- beta1
+        beta2_list[step+1] <- beta2
+        sigma1_list[step+1] <- sigma1
+        sigma2_list[step+1] <- sigma2
+        pi1_list[step+1] <- pi1
+
+        step <- step + 1
+    }
+    if (is_plot) {
+        result <- data.frame(pi1=pi1_list,
+                             beta1=beta1_list,
+                             beta2 = beta2_list, 
+                             sigma1 = sigma1_list,
+                             sigma2 = sigma2_list, 
+                             t=c(1:length(pi1_list)))
+        print(ggplot(data = melt(result,id = 't',variable.name="parameter") , 
+               aes(x=t, y=value, colour=parameter)) + 
+            geom_line()+
+            coord_cartesian(ylim=c(0, 11)) + 
+            scale_y_continuous(breaks=seq(0, 11, 1))+
+            theme_bw() + 
+            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +                 
+            labs(title="Parameter Estimated by LTEM", x = 'iteration', y = 'Value'))
+    }
+    return(list(pi1, beta1, beta2, sigma1, sigma2))
+}
+
+
+# a <- LTEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y, is_plot = T)
+```
+
+
+
+
+```{r}
+N <- 100
+time_list <- c(1:N)
+pi1_list <- c(1:N)
+beta1_list <- c(1:N)
+beta2_list <- c(1:N)
+sigma1_list <- c(1:N)
+sigma2_list <- c(1:N)
+real_pi1_list <- c(1:N)
+real_beta1_list <- c(1:N)
+real_beta2_list <- c(1:N)
+real_sigma1_list <- c(1:N)
+real_sigma2_list <- c(1:N)
+for(i in c(1:N)){
+    alldata <- generate_data(X1,X2)
+    Y <- alldata[[1]]
+    Z1 <- alldata[[2]]
+    Z2 <- alldata[[3]]
+    U <- alldata[[4]]
+    real_data <- real_parameters(X1,X2,Y,Z1,Z2,U)
+    real_pi1_list[i] <- real_data[[1]]
+    real_beta1_list[i] <- real_data[[2]]
+    real_beta2_list[i] <- real_data[[3]]
+    real_sigma1_list[i] <- real_data[[4]]
+    real_sigma2_list[i] <- real_data[[5]]
+    t_start <- Sys.time()
+    # Initialization 1    
+    # parameters <- tryCatch(LTEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y),
+    #                      error = function(e){0*c(1:5)})
+    # Initialization 2    
+    # parameters <- tryCatch(LTEM(0.5,3,2,5,5,2.5*1e-2,X1,X2,Y),
+    #                        error = function(e){0*c(1:5)})
+    # Initialization 3    
+    # pi1 <- sample(pi1_grid,1)
+    # beta1 <- sample(beta1_grid,1)
+    # beta2 <- sample(beta2_grid,1)
+    # sigma1 <- sample(sigma1_grid,1)
+    # sigma2 <- sample(sigma2_grid,1)
+    # parameters <- tryCatch(LTEM(pi1,beta1,beta2,sigma1,sigma2,2.5*1e-2,X1,X2,Y),
+    #                   error = function(e){0*c(1:5)})
+    t_end <- Sys.time()
+
+    time_list[i] <- t_end - t_start
+    pi1_list[i] <- parameters[[1]]
+    beta1_list[i] <- parameters[[2]]
+    beta2_list[i] <- parameters[[3]]
+    sigma1_list[i] <- parameters[[4]]
+    sigma2_list[i] <- parameters[[5]]
+}
+diver_rate <- sum(pi1_list==0)/N
+time_list <- time_list[pi1_list!=0]
+beta1_list <- beta1_list[pi1_list!=0]
+beta2_list <- beta2_list[pi1_list!=0]
+sigma1_list <- sigma1_list[pi1_list!=0]
+sigma2_list <- sigma2_list[pi1_list!=0]
+real_beta1_list <- real_beta1_list[pi1_list!=0]
+real_beta2_list <- real_beta2_list[pi1_list!=0]
+real_sigma1_list <- real_sigma1_list[pi1_list!=0]
+real_sigma2_list <- real_sigma2_list[pi1_list!=0]
+real_pi1_list <- real_pi1_list[pi1_list!=0]
+pi1_list <- pi1_list[pi1_list!=0]
+```
+
+```{r}
+# MSE
+cat(mean((pi1_list - real_pi1_list)^2),'\t&\t')
+cat(mean((beta1_list - real_beta1_list)^2),'\t&\t')
+cat(mean((beta2_list - real_beta2_list)^2),'\t&\t')
+cat(mean((sigma1_list - real_sigma1_list)^2),'\t&\t')
+cat(mean((sigma2_list - real_sigma2_list)^2),'\t&\t')
+# Mean Time
+cat(mean(time_list),'\n')
+```
+
+
+## NDLTEM
+```{r}
+NDLTEM <- function(pi1,
+                 beta1,
+                 beta2,
+                 sigma1,
+                 sigma2,
+                 epsilon0,
+                 X1,
+                 X2,
+                 Y,
+                 K = 500,
+                 burnin = 100,
+                 m = K - burnin,
+                 n = 100,
+                 T_ = 10,
+                 is_plot = F){
+    beta1_list <- c(beta1)
+    beta2_list <- c(beta2)
+    sigma1_list <- c(sigma1)
+    sigma2_list <- c(sigma2)
+    pi1_list <- c(pi1)
+
+    step <- 1
+    epsilon <- 1e10
+    while (epsilon > epsilon0) {
+        gibbs <- Gibbs(pi1, beta1, beta2, sigma1, sigma2, X1, X2, Y,K,burnin)
+        U_list <- gibbs[[1]]
+        Z1_list <- gibbs[[2]]
+        Z2_list <- gibbs[[3]]
+        
+        # Update parameters
+        pi1 <- sum(U_list==1)/m/n
+        sigma1 <- sqrt(mean(Z1_list[U_list==1]^2))
+        sigma2 <- sqrt(mean(Z2_list[U_list==2]^2))
+        
+        epi <- 1
+        beta1 <- 1
+        while (epi>1e-3) {
+            f2 <- sum(apply(Z1_list, 2, function(z){apply(X1^2 * 
+                    exp(beta1 * X1 + matrix(z, n, T_)) / (1 + 
+                    exp(beta1 * X1 + matrix(z, n, T_)))^2, 1, sum)})[U_list==1])
+            if(is.na(f2)){
+                print(mean(U_list))
+            }            
+            if (f2==0) {
+                break
+            }
+            new_beta1 <- beta1 + sum(apply(Z1_list, 2, function(z){apply(X1 * 
+                        (Y - 1 + 1 / (1 + exp(beta1 * X1 + 
+                        matrix(z, n, T_)))), 1, sum)})[U_list==1]) / f2
+            epi <- abs(new_beta1 - beta1)
+            beta1 <- new_beta1
+        }
+        epi <- 1
+        beta2 <- 1
+        while (epi>1e-3) {
+            f2 <- sum(apply(Z2_list, 2, function(z){apply(X2^2 * 
+                    exp(beta2 * X2 + matrix(z, n, T_)) / (1 + 
+                    exp(beta2 * X2 + matrix(z, n, T_)))^2, 1, sum)})[U_list==2])
+            if (f2==0) {
+                break
+            }
+            new_beta2 <- beta2 + sum(apply(Z2_list, 2, function(z){apply(X2 * 
+                        (Y - 1 + 1 / (1 + exp(beta2 * X2 + 
+                        matrix(z, n, T_)))), 1, sum)})[U_list==2]) / f2
+            epi <- abs(new_beta2 - beta2)
+            beta2 <- new_beta2
+        }
+        if(step>2){
+
+            H2 <- -mean((apply(Z1_list, 2, function(z){apply(X1 * 
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)))), 1, sum)})[U_list==1])^2)
+                + mean(apply(Z1_list, 2, function(z){apply(X1 *   
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)))^2), 1, sum)})[U_list==1])^2
+            Q2 <- - mean(apply(Z1_list, 2, function(z){apply(X1^2 * 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)) / (1 + 
+                    exp(beta1_list[step] * X1 + matrix(z, n, T_)))^2, 1, sum)})[U_list==1])
+            if (H2+Q2!=0) {
+                Q1 <- - mean(apply(Z1_list, 2, function(z){apply(X1 * 
+                            (Y - 1 + 1 / (1 + exp(beta1_list[step] * X1 + 
+                                    matrix(z, n, T_)))), 1, sum)})[U_list==1])                
+                Q1_last <- - mean(apply(Z1_list, 2, function(z){apply(X1 * 
+                            (Y - 1 + 1 / (1 + exp(beta1_list[step-1] * X1 + 
+                                    matrix(z, n, T_)))), 1, sum)})[U_list==1])
+                lambda <- 1
+                while (lambda * abs(Q1) > abs(Q1_last)){
+                    lambda <- lambda / 2
+                }                
+                beta1 <- beta1_list[step] + lambda * Q2/(H2+Q2)*(beta1 - beta1_list[step])
+            }
+            H2 <- -mean((apply(Z2_list, 2, function(z){apply(X2 * 
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)))), 1, sum)})[U_list==2])^2)
+                + mean(apply(Z2_list, 2, function(z){apply(X2 *   
+                    (Y - 1 + 1 / (1 + 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)))^2), 1, sum)})[U_list==2])^2
+            Q2 <- - mean(apply(Z2_list, 2, function(z){apply(X2^2 * 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)) / (1 + 
+                    exp(beta2_list[step] * X2 + matrix(z, n, T_)))^2, 1, sum)})[U_list==2])
+            if (H2+Q2!=0) {
+                Q <- - mean(apply(Z2_list, 2, function(z){apply(X2 * 
+                            (Y - 1 + 1 / (1 + exp(beta2_list[step] * X2 + 
+                                    matrix(z, n, T_)))), 1, sum)})[U_list==2])                
+                Q_last <- - mean(apply(Z2_list, 2, function(z){apply(X2 * 
+                            (Y - 1 + 1 / (1 + exp(beta2_list[step-1] * X2 + 
+                                    matrix(z, n, T_)))), 1, sum)})[U_list==2])
+                lambda <- 1
+                while (lambda * abs(Q) > abs(Q_last)){
+                    lambda <- lambda / 2
+                }
+                beta2 <- beta2_list[step] + lambda * Q2/(H2+Q2)* 
+                    (beta2 - beta2_list[step])    
+            }
+        }   
+        epsilon <- max( abs(beta1 - beta1_list[step])/(abs(beta1_list[step]) + 1e-12),
+                        abs(beta2 - beta2_list[step])/(abs(beta2_list[step]) + 1e-12),
+                        abs(sigma1 - sigma1_list[step])/(abs(sigma1_list[step]) + 1e-12),
+                        abs(sigma2 - sigma2_list[step])/(abs(sigma2_list[step]) + 1e-12),
+                        abs(pi1 - pi1_list[step])/(abs(pi1_list[step]) + 1e-12))
+        
+        beta1_list[step+1] <- beta1
+        beta2_list[step+1] <- beta2
+        sigma1_list[step+1] <- sigma1
+        sigma2_list[step+1] <- sigma2
+        pi1_list[step+1] <- pi1
+
+        step <- step + 1
+    }
+    if (is_plot) {
+        result <- data.frame(pi1=pi1_list,
+                             beta1=beta1_list,
+                             beta2 = beta2_list, 
+                             sigma1 = sigma1_list,
+                             sigma2 = sigma2_list, 
+                             t=c(1:length(pi1_list)))
+        print(ggplot(data = melt(result,id = 't',variable.name="parameter") , 
+               aes(x=t, y=value, colour=parameter)) + 
+            geom_line()+
+            coord_cartesian(ylim=c(0, 11)) + 
+            scale_y_continuous(breaks=seq(0, 11, 1))+
+            theme_bw() + 
+            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +                 
+            labs(title="Parameter Estimated by NDLTEM", x = 'iteration', y = 'Value'))
+    }
+    return(list(pi1, beta1, beta2, sigma1, sigma2))
+}
+# a <- NDLTEM(0.5,1.5,1.5,3,8,5*1e-2,X1,X2,Y, is_plot = T)
+
+```
+
+
+```{r}
+
+N <- 1000
+time_list <- c(1:N)
+pi1_list <- c(1:N)
+beta1_list <- c(1:N)
+beta2_list <- c(1:N)
+sigma1_list <- c(1:N)
+sigma2_list <- c(1:N)
+real_pi1_list <- c(1:N)
+real_beta1_list <- c(1:N)
+real_beta2_list <- c(1:N)
+real_sigma1_list <- c(1:N)
+real_sigma2_list <- c(1:N)
+for(i in c(1:N)){
+    alldata <- generate_data(X1,X2)
+    Y <- alldata[[1]]
+    Z1 <- alldata[[2]]
+    Z2 <- alldata[[3]]
+    U <- alldata[[4]]
+    real_data <- real_parameters(X1,X2,Y,Z1,Z2,U)
+    real_pi1_list[i] <- real_data[[1]]
+    real_beta1_list[i] <- real_data[[2]]
+    real_beta2_list[i] <- real_data[[3]]
+    real_sigma1_list[i] <- real_data[[4]]
+    real_sigma2_list[i] <- real_data[[5]]    
+    t_start <- Sys.time()
+    # Initialization 1
+    # parameters <- NDLTEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y)
+    # Initialization 2
+    # parameters <- NDLTEM(0.5,3,2,5,5,2.5*1e-2,X1,X2,Y)
+    # Initialization 3
+    # pi1 <- sample(pi1_grid)
+    # beta1 <- sample(beta1_grid,1)
+    # beta2 <- sample(beta2_grid,1)
+    # sigma1 <- sample(sigma1_grid,1)
+    # sigma2 <- sample(sigma2_grid,1)
+    # parameters <- NDLTEM(pi1,beta1,beta2,sigma1,sigma2,2.5*1e-2,X1,X2,Y)
+    t_end <- Sys.time()
+
+    time_list[i] <- t_end - t_start
+    pi1_list[i] <- parameters[[1]]
+    beta1_list[i] <- parameters[[2]]
+    beta2_list[i] <- parameters[[3]]
+    sigma1_list[i] <- parameters[[4]]
+    sigma2_list[i] <- parameters[[5]]
+}
+```
+
+```{r}
+mse_sigma1<-c(1:10)
+mse_sigma2<-c(1:10)
+mse_beta1<-c(1:10)
+mse_beta2<-c(1:10)
+mse_pi1 <- c(1:10)
+for(N in c(1:10)){
+    mse_pi1[N] <- mean((pi1_list[1:(N*100)] - real_pi1_list[1:(N*100)])^2)
+    mse_sigma1[N] <- mean((sigma1_list[1:(N*100)] - real_sigma1_list[1:(N*100)])^2)
+    mse_sigma2[N] <- mean((sigma2_list[1:(N*100)] - real_sigma2_list[1:(N*100)])^2)
+    mse_beta1[N] <- mean((beta1_list[1:(N*100)] - real_beta1_list[1:(N*100)])^2)
+    mse_beta2[N] <- mean((beta2_list[1:(N*100)] - real_beta2_list[1:(N*100)])^2)    
+    
+    # MSE
+    cat(mse_pi1[N],'\t&\t')
+    cat(mse_beta1[N],'\t&\t')
+    cat(mse_beta2[N],'\t&\t')
+    cat(mse_sigma1[N],'\t&\t')
+    cat(mse_sigma2[N],'\t&\t')    
+    # Mean Time
+    cat(mean(time_list[1:(N*100)]),'\n')
+}
+```
+
+```{r}
+result <- data.frame(pi1 = mse_pi1,
+                     beta1 = mse_beta1,
+                     beta2 = mse_beta2,
+                     sigma1 = mse_sigma1,
+                     sigma2 = mse_sigma2,
+                     t=c(1:10)*100)
+print(ggplot(data = melt(result,id = 't',variable.name="parameter") , 
+       aes(x=t, y=value, colour=parameter)) + 
+    geom_line()+
+    geom_point() +
+    # coord_cartesian(ylim=c(0, 11)) + 
+    # scale_y_continuous(breaks=seq(0, 11, 1))+
+    scale_x_continuous(breaks=seq(0, 1000, 100))+
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+    labs(title="MSE by NDLTEM", x = 'stimulations', y = 'Value'))
+```
+
+```{r}
+# MSE
+cat(mean((pi1_list - real_pi1_list)^2),'\t&\t')
+cat(mean((beta1_list - real_beta1_list)^2),'\t&\t')
+cat(mean((beta2_list - real_beta2_list)^2),'\t&\t')
+cat(mean((sigma1_list - real_sigma1_list)^2),'\t&\t')
+cat(mean((sigma2_list - real_sigma2_list)^2),'\t&\t')
+# Mean Time
+cat(mean(time_list),'\n')
+```
+
+
+```{r}
+parameters <- MCEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y,is_plot = T)
+parameters <- LTEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y,is_plot = T)
+parameters <- NDLTEM(0.5,1.5,3,4,8,2.5*1e-2,X1,X2,Y,is_plot = T)
+```
+

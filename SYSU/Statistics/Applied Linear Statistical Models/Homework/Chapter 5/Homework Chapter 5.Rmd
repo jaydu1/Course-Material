@@ -1,0 +1,173 @@
+---
+title: "Homework Chapter 5"
+author: "Jinhong Du 15338039"
+output:
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+  html_document:
+    code_folding: hide
+---
+
+### 5.5 **Consumer ﬁnance**. 
+#### The data below show, for a consumer ﬁnance company operating in six cities, the number of competing loan companies operating in the city ($X$) and the number per thousand of the company’s loans made in that city that are currently delinquent ($Y$): 
+$i$  | 1 | 2 | 3 | 4 | 5 | 6      
+----|----|----|----|----|----|----
+$X_i$  | 4  | 1 |  2 |  3 |  3 |  4
+$Y_i$  | 16 | 5 | 10 | 15 | 13 | 22
+#### Assume that ﬁrst-order regression model (2.1) is applicable. Using matrix methods, ﬁnd 
+
+#### (1) $Y'Y$.
+```{r}
+data1 <- read.table("CH05PR05.txt",head=FALSE,col.names = c('Y','X'))
+Y <- matrix(data1$Y)
+n = length(Y)
+X <- cbind(rep(1,n),data1$X)
+crossprod(Y)
+```
+
+#### (2) $X'X$. 
+```{r}
+crossprod(X)
+```
+
+#### (3) $X'Y$.
+```{r}
+crossprod(X,Y)
+```
+
+
+### 5.18 Consider the following functions of the random variables $Y_1$, $Y_2$, $Y_3$ and $Y_4$:
+$$W_1=\dfrac{1}{4}(Y_1+Y_2+Y_3+Y_4)$$
+$$W_2=\dfrac{1}{2}(Y_1+Y_2)-\dfrac{1}{2}(Y_3-Y_4)$$
+
+#### (a) State the above in matrix notation.
+$$\begin{bmatrix}
+W_1\cr
+W_2
+\end{bmatrix}=\begin{bmatrix}
+\frac{1}{4}&\frac{1}{4}&\frac{1}{4}&\frac{1}{4}\cr
+\frac{1}{2}&\frac{1}{2}&-\frac{1}{2}& -\frac{1}{2}
+\end{bmatrix}\begin{bmatrix}
+Y_1\cr
+Y_2\cr
+Y_3\cr
+Y_4
+\end{bmatrix}$$
+i.e. $$W=AY$$
+
+#### (b) Find the expectation of the random vector $W$.
+\begin{align*}
+  \mathbb{E}W &=\mathbb{E}(AY)\\
+  &=A\mathbb{E}Y\\
+  &=A\begin{bmatrix}
+\mathbb{E}Y_1\cr
+\mathbb{E}Y_2\cr
+\mathbb{E}Y_3\cr
+\mathbb{E}Y_4
+\end{bmatrix}\\
+  &= \begin{bmatrix}
+  \dfrac{1}{4}(\mathbb{E}Y_1+\mathbb{E}Y_2+\mathbb{E}Y_3+\mathbb{E}Y_4)\cr
+\dfrac{1}{2}(\mathbb{E}Y_1+\mathbb{E}Y_2-\mathbb{E}Y_3-\mathbb{E}Y_4)
+\end{bmatrix}\\
+\end{align*}
+
+#### (c) Find the variance-covariance of $W$.
+\begin{align*}
+  \mathbb{D}(W) &=\mathbb{D}(AY)\\
+  &=A\mathbb{D}(Y)A\\
+  &=A\begin{bmatrix}
+\mathbb{D}Y_1& Cov(Y_1,Y_2)& Cov(Y_1,Y_3)& Cov(Y_1,Y_4)\cr
+Cov(Y_2,Y_1)&\mathbb{D}Y_2& Cov(Y_2,Y_3)& Cov(Y_2,Y_4)\cr
+Cov(Y_3,Y_1)&Cov(Y_3,Y_2)& \mathbb{D}(Y_3)& Cov(Y_3,Y_4)\cr
+Cov(Y_4,Y_1)&Cov(Y_4,Y_2)& Cov(Y_4,Y_3)& \mathbb{D}(Y_4)\
+\end{bmatrix}A^T\\
+&=A\begin{bmatrix}
+\sigma^2_1& \sigma_{12}&  \sigma_{13}&  \sigma_{14}\cr
+\sigma_{21}& \sigma_2^2&  \sigma_{23}&  \sigma_{24}\cr
+\sigma_{31}& \sigma_{32}&  \sigma_3^2&  \sigma_{34}\cr
+\sigma_{41}& \sigma_{42}&  \sigma_{43}&  \sigma_4^2\cr
+\end{bmatrix}A^T\\
+  &=\begin{bmatrix}
+  \sigma^2\{W_1\}& \sigma\{W_1,W_2\}\cr
+  \sigma\{W_2,W_1\}& \sigma^2\{W_2\}
+  \end{bmatrix}
+\end{align*}
+where \begin{align*}
+  \sigma^2\{W_1\}&=\dfrac{1}{16}(\sigma_1^2+\sigma_2^2+\sigma_3^2+\sigma_4^2+2\sigma_{12}+2\sigma_{13}+2\sigma_{14}+2\sigma_{23}+2\sigma_{24}+2\sigma_{34})\\
+ \sigma^2\{W_2\} &=\dfrac{1}{4}(\sigma_1^2+\sigma_2^2+\sigma_3^2+\sigma_4^2+2\sigma_{12}-2\sigma_{13}-2\sigma_{14}-2\sigma_{23}-2\sigma_{24}+2\sigma_{34})\\
+ \sigma\{W_1,W_2\}&=\sigma\{W_2,W_1\}=\dfrac{1}{8}(\sigma_1^2+\sigma_2^2-\sigma_3^2-\sigma_4^2+2\sigma_{12}-2\sigma_{34})
+\end{align*}
+
+### 5.24 Refer to **Consumer ﬁnance** Problems 5.5 and 5.13.
+#### (a) Using matrix methods, obtain the following: 
+ (1) vector of estimated regression coefficients, 
+ (2) vector of residuals, 
+ (3) $SSR$, 
+ (4) $SSE$, 
+ (5) estimated variance-covariance matrix of $b$, 
+ (6) point estimate of $\mathbb{Ε}\{Y_h\}$ when $X_h=4$, 
+ (7) $s^2\{pred\}$ when $X_h = 4$.
+
+```{r}
+fit <- lm('Y~X',data1)
+b <- as.matrix(fit$coefficients)
+res <- as.matrix(fit$residuals)
+J = matrix(rep(1,n*n),nrow=n,ncol=n)
+SSR <- t(b)%*%crossprod(X,Y) - t(Y)%*%J%*%Y/n
+SSE <- crossprod(Y) - t(b)%*%crossprod(X,Y)
+MSE <- SSE/fit$df.residual
+s2b <- solve(crossprod(X)) * MSE[1,1]
+Xh <- matrix(c(1,4),nrow = 2,ncol = 1)
+EYh <- t(b) %*% Xh
+s2_pred <- (1+t(Xh)%*%solve(crossprod(X))%*%Xh)*MSE[1,1]
+print("Regression coefficients matrix is ")
+print(b)
+print("Residual is ")
+print(res)
+print(sprintf("SSR is %f",SSR))
+print(sprintf("SSE is %f",SSE))
+print("estimated variance-covariance matrix of b is")
+print(s2b)
+print(sprintf("point estimate of E{Yh} when Xh=4 is %f",EYh))
+print(sprintf("s2{pred} when Xh=4 is %f",s2_pred))
+```
+
+
+#### (b) From your estimated variance—covariance matrix in part (a5), obtain the following:
+  (1) $s\{b_0,b_1\}$;
+  (2) $s^2\{b_0\}$;
+  (3) $s\{b_1\}$.
+
+```{r}
+print(sprintf("s{b0,b1} is %f",s2b[1,2]))
+print(sprintf("s2{b0} is %f",s2b[1,1]))
+print(sprintf("s{b1} is %f",sqrt(s2b[2,2])))
+```
+
+#### (c) Find the hat matrix ${\bf H}$.
+```{r}
+H <- X%*%solve(crossprod(X))%*%t(X)
+print("The hat matrix H is ")
+print(H)
+```
+
+#### (d) Find $s^2\{e\}$.
+```{r}
+s2e <- (diag(n)-H)*MSE[1,1]
+print("s2{e} is ")
+print(s2e)
+```
+
+### 5.28 Consider model (4.10) for regression through the origin and the estimator $b_1$ given in (4.14). Obtain (4.14) by utilizing (5.60) with ${\bf X}$ suitably defined.
+Let $$X=\begin{bmatrix}
+X_1\cr
+X_2\cr
+\vdots\cr
+X_n
+\end{bmatrix}$$
+Then \begin{align*}
+b_1
+&= (X^TX)^{-1}X^TY\\
+&=\dfrac{\sum\limits_{i=1}^nX_iY_i}{\sum\limits_{i=1}^nX_i^2}\\
+\end{align*}

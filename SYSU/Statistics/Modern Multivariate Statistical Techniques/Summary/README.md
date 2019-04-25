@@ -1,0 +1,1 @@
+Warning: The derivation process of SVM is a bit wrong, especially for $\beta_0$. Be careful.

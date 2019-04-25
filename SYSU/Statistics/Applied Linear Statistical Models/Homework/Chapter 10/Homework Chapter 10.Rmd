@@ -1,0 +1,172 @@
+---
+title: "Homework Chapter 10"
+author: "Jinhong Du 15338039"
+output:
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+  html_document:
+    code_folding: hide
+---
+
+### 10.9 Refer to **Brand preference** Problem 6.5.
+
+#### a. Obtain the studentized deleted residuals and identify any outlying $Y$ observations. Use the Bonferroni outlier test procedure with $\alpha = .10$. State the decision rule and conclusion.
+```{r}
+data1 <- read.table("CH06PR05.txt",head=FALSE,col.names = c('Y',
+'X1','X2'))
+Y <- data1$Y
+X1 <- data1$X1
+X2 <- data1$X2
+n = length(Y)
+X <- cbind(rep(1,n),X1,X2)
+fit1 <- lm('Y~X1+X2',data=data1)
+e <- fit1$residuals
+df_ <- fit1$df.residual
+SSE <- sum(e^2)
+h <- diag(X%*%solve(crossprod(X))%*%t(X))
+t <- e*sqrt(df_-1)/sqrt(SSE*(1-h)-e^2)
+tab <- as.table(cbind(
+  'e' = e,
+  't' = t
+))
+round(t(tab), 4)
+print(sprintf('t(%f;%d)=%f',1-0.1/2/n,df_,qt(1-0.1/2/n,df_)))
+print(sprintf('max{|t_i|}=%f',max(abs(t))))
+```
+\begin{align*}
+d_i&=Y_i-\hat{Y}_{i(i)}\\
+&=\dfrac{e_i}{1-h_{ii}}\\
+s\{d_i\}&= MSE_{(i)}[1+X_i^T(X^T_{(i)}X_{(i)})^{-1}X_i]\\
+&=\dfrac{MSE_{(i)}}{1-h_{ii}}\\
+t_i&=\dfrac{d_i}{s\{d_i\}}\\
+&=\dfrac{e_i}{\sqrt{MSE_{(i)}(1-h_{ii})}}\\
+&=\dfrac{e_i\sqrt{n-p-1}}{\sqrt{SSE(1-h_{ii})-e^2_i}}\sim t(n-p-1)
+\end{align*}
+
+$$H_0:(X_i,Y_i) \text{ is an outlier}\qquad H_a:(X_i,Y_i) \text{ is not an outlier}$$
+the test statistic is $t_i$. 
+
+Given $\alpha$, the decision rule is 
+
+If $|t_i|\geqslant t(1-\frac{\alpha}{2n};n-p),$ then conclude $H_0$;
+
+If $|t_i|< t(1-\frac{\alpha}{2n};n-p),$ then conclude $H_a$;
+
+Here, $\max\limits_i\{|t_i|\}=2.102726<t(0.996875;13)=3.256463$, therefore, conclude $H_a$, i.e. there is no outlier.
+
+#### b. Obtain the diagonal elements of the hat matrix, and provide an explanation for the pattern in these elements.
+```{r}
+print(h)
+plot(c(1:n),h,xlab = 'i',ylab='hii')
+```
+
+Half $h_{ii}=0.2375$ and the others equal to $0.1375$. It means that the data can be equally divided into 2 groups. In each of these group, the distances between the data and the regression surface are the same.  
+
+#### c. Are any of the observations outlying with regard to their $X$ values according to the rule of thumb stated in the chapter?
+```{r}
+p = n-df_
+print(2*p/n)
+```
+Since $\frac{2p}{n}=0.375>0.2375=\max\limits_i\{h_{ii}\}$, there is no observation outlying with regard to their $X$ values.
+
+#### g. Calculate Cook's distance $D_i$ for each case and prepare an index plot. Are any cases influential according to this measure?
+```{r}
+MSE <- SSE/df_
+D <- e^2 /p/MSE*h/((1-h)^2)
+print(D)
+plot(c(1:n),D,'b',xlab = 'Case Index Number',ylab='Cook\'s Distance D')
+```
+\begin{align*}
+D_i&=\dfrac{\sum\limits_{j=1}^n(\hat{Y}_j-\hat{Y}_{j(i)})^2}{pMSE}\\
+&=\dfrac{e^2_ih_{ii}}{pMSE(1-h_{ii})^2}
+\end{align*}
+
+For a small data set, all $D_i$ is less than $1$. Therefore, there is no cases influential according to this measure.
+
+### 10.13 **Cosmetics sales**. An assistant in the district sales office of a national cosmetics firm obtained data, shown below, on advertising expenditures and sales last year in the district's $44$ territories. $X_1$ denotes expenditures for point-of-sale displays in beauty salons and department stores (in thousand dollars), and $X_2$ and $X_3$ represent the corresponding expenditures for local media advertising and prorated share of national media advertising, respectively. $Y$ denotes sales (in thousand cases). The assistant was instructed to estimate the increase in expected sales when $X_1$ is increased by $1$ thousand dollars and $X_2$ and $X_3$ are held constant, and was told to use an ordinary multiple regression model with linear terms for the predictor variables and with independent normal error terms.
+
+#### a. State the regression model to be employed, and fit it to the data.
+```{r}
+data2 <- read.table("CH10PR13.txt",head=FALSE,col.names = c('Y',
+'X1','X2','X3'))
+Y <- data1$Y
+X1 <- data2$X1
+X2 <- data2$X2
+X3 <- data2$X3
+n = length(Y)
+fit2 <- lm('Y~X1+X2+X3',data=data2)
+summary(fit2)
+print(fit2$fitted.values)
+```
+The regression model is 
+$$Y=1.0233+0.9657X_1+0.6292X_2+0.6760X_3+\epsilon$$
+
+#### b. Test whether there is a regression relation between sales and the three predictor vruiables; use $\alpha = .05$. State the alternatives, decision rule, and conclusion.
+```{r}
+fit2.aov <- anova(fit2)
+SSR <- sum(fit2.aov[1:2, 2])
+SSE <- sum(fit2$residuals^2)
+F <- (SSR)/(3-1)/(SSE/fit2$df.residual)
+print(sprintf('F*=%f',F))
+print(sprintf('F(0.95;%d,%d)=%f',3-1,fit2$df.residual,df(0.95,3-1,fit2$df.residual)))
+```
+
+$$H_0:\beta_1=\beta_2=\beta_3=0\qquad H_a: \text{not all }\beta_k=0\ (k=1,2,3)$$
+The test statistic is
+\begin{align*}
+F^*&=\dfrac{\frac{SSR(X_1,X_2,X_3)}{p-1}}{\frac{SSE(X_1,X_2,X_3)}{n-p}}\\
+&=\dfrac{MSR}{MSE}
+\end{align*}
+
+Given $\alpha$, the decision rule is 
+
+If $F^*\leqslant F(1-\alpha;2,40),$ then conclude $H_0$;
+
+If $F^*> F(1-\alpha;2,40),$ then conclude $H_a$;
+
+Here, $F^*=55.613439>F(0.95;2,40)=0.377368$, therefore, conclude $H_a$, i.e. not all $\beta_k=0\ (k=1,2,3)$.
+
+#### c. Test for each of the regression coetficients $\beta_k (k = 1, 2, 3)$ individually whether or not $\beta_k = 0$; use $\alpha = .05$ each time. Do the conclusions of these tests correspond to that obtained in part (b)?
+```{r}
+SSE123 <- sum(fit2$residuals^2)
+SSR1_23 <- sum(lm('Y~X2+X3',data=data2)$residuals^2)-SSE123
+SSR2_13 <- sum(lm('Y~X1+X3',data=data2)$residuals^2)-SSE123
+SSR3_12 <- sum(lm('Y~X1+X2',data=data2)$residuals^2)-SSE123
+F1 <- SSR1_23/(SSE123/fit2$df.residual)
+F2 <- SSR2_13/(SSE123/fit2$df.residual)
+F3 <- SSR3_12/(SSE123/fit2$df.residual)
+print(sprintf('When k=1, F*=%f',F1))
+print(sprintf('When k=2, F*=%f',F2))
+print(sprintf('When k=3, F*=%f',F3))
+print(sprintf('F(0.95;%d,%d)=%f',1,fit2$df.residual,df(0.95,1,fit2$df.residual)))
+```
+
+For $k=1,2,3$,
+$$H_0:\beta_k=0\qquad H_a: \beta_k\neq 0$$
+The test statistic is
+\begin{align*}
+F^*&=\dfrac{\frac{SSR(X_k|X_j,\text{ for }j=1,2,3,\ j\neq k)}{1}}{\frac{SSE(X_1,X_2,X_3)}{n-p}}\\
+&=\dfrac{MSR(X_k|X_j,\text{ for }j=1,2,3,\ j\neq k)}{MSE(X_1,X_2,X_3)}
+\end{align*}
+
+Given $\alpha$, the decision rule is 
+
+If $F^*\leqslant F(1-\alpha;1,40),$ then conclude $H_0$;
+
+If $F^*> F(1-\alpha;1,40),$ then conclude $H_a$;
+
+Here, $F^*=\begin{cases}
+1.854008&,k=1\\
+0.653481&,k=2\\
+3.611251&,k=3
+\end{cases}>F(0.95;1,40)=0.251396$, therefore, conclude $H_a$, i.e. $\beta_k\neq 0\ (k=1,2,3)$.
+
+#### d. Obtain the correlation matrix of the $X$ variables.
+```{r}
+cor(cbind(X1,X2,X3))
+```
+
+
+#### e. What do the results in parts (b), (c), and (d) suggest about the suitability of the data for the research objective?
+Under this model, the expect sales when $X_1$ is increased by $1$ thousand dollars and $X_2$  and $X_3$ are held constant, is $\beta_1$. It can be estimated by $b_1$. Since $X_1$ and $X_2$ may be linear related from (d), when $X_2$ is fixed, $X_1$ is almost fixed, i.e. $b_1\approx0$. There is a contradiction and therefore, the data may not be suitable for the research objective.

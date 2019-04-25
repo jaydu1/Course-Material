@@ -1,0 +1,1141 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Homework Chapter 2},
+            pdfauthor={Jinhong Du 15338039},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{Homework Chapter 2}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Jinhong Du 15338039}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \date{}
+  \predate{}\postdate{}
+
+
+\begin{document}
+\maketitle
+
+\subsubsection{\texorpdfstring{1
+求\(Es\{b_1\}\)，证明它不是无偏估计}{1 求Es\textbackslash{}\{b\_1\textbackslash{}\}，证明它不是无偏估计}}\label{esb_1}
+
+\(\because\quad\) \(\dfrac{(n-2)MSE}{\sigma^2}\sim\chi^2(n-2)\)
+
+\(\therefore\quad\)
+\(\dfrac{(n-2)SS_{XX}s^2\{b_1\}}{\sigma^2}\sim\chi^2(n-2)\)
+
+\(\therefore\quad\)
+
+\begin{align*}
+E\left(\sqrt{\dfrac{(n-2)SS_{XX}s^2\{b_1\}}{\sigma^2}}\right)&=\int_0^{\infty}\dfrac{1}{\Gamma(\frac{n-2}{2})2^{\frac{n-2}{2}}}x^{\frac{n-2}{2}-1}e^{-\frac{x}{2}} x^{\frac{1}{2}}\mathrm{d}x\\
+&=\dfrac{\Gamma(\frac{n-2}{2})2^{\frac{n-2}{2}}}{\Gamma(\frac{n-1}{2})2^{\frac{n-1}{2}}}\int_0^{\infty}\dfrac{1}{\Gamma(\frac{n-1}{2})2^{\frac{n-1}{2}}}x^{\frac{n-1}{2}-1}e^{-\frac{x}{2}} \mathrm{d}x\\
+&=\dfrac{\Gamma(\frac{n-2}{2})}{\Gamma(\frac{n-1}{2})2^{\frac{1}{2}}}
+\end{align*}
+
+\(\therefore\quad\)
+\[E(s\{b_1\})=\sqrt{\dfrac{\sigma^2}{2(n-2)SS_{XX}}}\dfrac{\Gamma(\frac{n-2}{2})}{\Gamma(\frac{n-1}{2})}\neq \sigma\]
+\(\therefore\quad\) \(s\{b_1\}\) is not a unbiased estimator of
+\(\sigma\)
+
+\subsubsection{\texorpdfstring{2
+证明\[\max\limits_{X_h}\frac{\left(\frac{\hat{Y}_h-\mathbb{E}Y_h}{s\{\hat{Y}_h\}}\right)^2}{2}\sim F(2,n-2),\]其中\(s\{\hat{Y}_h\}=\sqrt{MSE\left(\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right)}\)}{2 证明\textbackslash{}max\textbackslash{}limits\_\{X\_h\}\textbackslash{}frac\{\textbackslash{}left(\textbackslash{}frac\{\textbackslash{}hat\{Y\}\_h-\textbackslash{}mathbb\{E\}Y\_h\}\{s\textbackslash{}\{\textbackslash{}hat\{Y\}\_h\textbackslash{}\}\}\textbackslash{}right)\^{}2\}\{2\}\textbackslash{}sim F(2,n-2),其中s\textbackslash{}\{\textbackslash{}hat\{Y\}\_h\textbackslash{}\}=\textbackslash{}sqrt\{MSE\textbackslash{}left(\textbackslash{}frac\{1\}\{n\}+\textbackslash{}frac\{(X\_h-\textbackslash{}overline\{X\})\^{}2\}\{SS\_\{XX\}\}\textbackslash{}right)\}}}\label{maxlimits_x_hfracleftfrachaty_h-mathbbey_hshaty_hright22sim-f2n-2shaty_hsqrtmseleftfrac1nfracx_h-overlinex2ss_xxright}
+
+\(\because\quad\)
+\[\max\limits_{t}\dfrac{(a+bt)^2}{c+dt^2}=\dfrac{a^2}{c}+\dfrac{b^2}{d}\]
+
+\(\therefore\quad\)
+
+\begin{align*}
+\max\limits_i\frac{1}{2}\left(\frac{\hat{Y}_h-\mathbb{E}Y_h}{s\{\hat{Y}_h\}}\right)^2&=\max\limits_i\frac{1}{2} \dfrac{[(\hat{\beta}_0+\hat{\beta}_1X_h)-(\beta_0+\beta_1X_h)]^2}{MSE\left(\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right)}\\
+&=\max\limits_i\frac{1}{2} \dfrac{[(\overline{Y}-\mathbb{E}\overline{Y})+(\hat{\beta_1}-\beta_1)(X_h-\overline{X})]^2}{MSE\left(\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right)}\\
+&=\frac{1}{2MSE}\dfrac{(\overline{Y}-\mathbb{E}\overline{Y})^2}{\frac{1}{n}}+\frac{1}{2MSE}\dfrac{(\hat{\beta_1}-\beta_1)^2}{\frac{1}{SS_{XX}}}\\
+&=\dfrac{\dfrac{\left(\frac{\overline{Y}-\mathbb{E}\overline{Y}}{\sqrt{\frac{\sigma^2}{n}}}\right)^2+\left(\frac{\hat{\beta_1}-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\right)^2}{2}}{\dfrac{\dfrac{SSE}{\sigma^2}}{n-2}}
+\end{align*}
+
+\(\because\quad\)
+\(\left(\frac{\overline{Y}-\mathbb{E}\overline{Y}}{\sqrt{\frac{\sigma^2}{n}}}\right)^2\sim\chi^2(1),\ \left(\frac{\hat{\beta_1}-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\right)^2\sim\chi^2(1),\ \dfrac{MSE}{\sigma^2}\sim\chi^2(n-2)\)
+
+\(\therefore\quad\)
+\[\max\limits_{X_h}\frac{\left(\frac{\hat{Y}_h-\mathbb{E}Y_h}{s\{\hat{Y}_h\}}\right)^2}{2}\sim F(2,n-2)\]
+
+\subsubsection{3}\label{section}
+
+\[(X,Y)\sim N(\mu_1,\mu_2,\sigma_1,\sigma_2,\rho)\]
+\[H_0:\rho=0.3\qquad H_1:\rho\neq 0.3\] Do the Fisher z
+transformation\[z'=\frac{1}{2}\ln\left(\dfrac{1+r_{12}}{1-r_{12}}\right)\]
+When \(n\) is large, approximately
+\[z'\overset{\cdot}{\sim} N\left(\xi,\dfrac{1}{n-3}\right)\] where
+\[\xi=\dfrac{1}{2}\ln\left(\dfrac{1+\rho_{12}}{1-\rho_{12}}\right)\]
+\(\because\quad\)
+\[\rho_{12}=\lim\limits_{\xi\rightarrow\infty}\dfrac{e^{2\xi}-1}{e^{2\xi}+1}\]
+\(\therefore\quad\)
+\[\mathbb{P}\left(\dfrac{|z'-\xi|}{\sqrt{\frac{1}{n-3}}}<z(1-\frac{\alpha}{2})\right)=1-\alpha\]
+Here, the transform correlation is
+\[z'=\dfrac{1}{2}\ln\left(\dfrac{1+0.3}{1-0.3}\right)=0.1783375\]
+\(\therefore\quad\) the \(100(1-\alpha)\%\) confidence interval of
+\(\xi\) is
+\((z'-z(1-\frac{\alpha}{2})\sqrt{\frac{1}{n-3}},z'+z(1-\frac{\alpha}{2})\sqrt{\frac{1}{n-3}})=(c_1,c_2)\)
+
+\(\therefore\quad\) the \(100(1-\alpha)\%\) confidence interval of
+\(\rho_{12}\) is
+\(\left(\dfrac{e^{2c_1}-1}{e^{2c_1}+1},\dfrac{e^{2c_2}-1}{e^{2c_2}+1}\right)\)
+
+\subsubsection{\texorpdfstring{2.6 Refer to \textbf{Airfreight breakage}
+Problem
+1.21.}{2.6 Refer to Airfreight breakage Problem 1.21.}}\label{refer-to-airfreight-breakage-problem-1.21.}
+
+\paragraph{\texorpdfstring{(a) Estimate \(\beta_1\) with a \(95\)
+percent confidence interval. Interpret your interval
+estimate.}{(a) Estimate \textbackslash{}beta\_1 with a 95 percent confidence interval. Interpret your interval estimate.}}\label{a-estimate-beta_1-with-a-95-percent-confidence-interval.-interpret-your-interval-estimate.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{16}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{17}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{22}\NormalTok{, }\DecValTok{13}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{19}\NormalTok{, }\DecValTok{11}\NormalTok{)}
+\NormalTok{data1 <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(x,y)}
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\StringTok{'y~x'}\NormalTok{,data1)}
+\KeywordTok{confint}\NormalTok{(fit) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                2.5 %    97.5 %
+## (Intercept) 8.670370 11.729630
+## x           2.918388  5.081612
+\end{verbatim}
+
+\(\because\quad\beta_1\sim N(\beta_1,\frac{\sigma^2}{SS_{XX}})\)
+
+\(\therefore\quad \dfrac{b_1-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\sim N(0,1)\)
+
+\(\because\quad\dfrac{(n-2)MSE}{\sigma^2}\sim \chi^2_{n-2}\), \(b_1\)
+and \(MSE\) are independent
+
+\(\therefore\quad\)
+\(\dfrac{\ \dfrac{b_1-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\ }{\dfrac{(n-2)MSE}{\sigma^2}}=\dfrac{b_1-\beta_1}{\sqrt{\dfrac{MSE}{SS_{XX}}}}\sim t(n-2)\)
+
+\(\because\quad\)
+\[Pr\left\{t(0.025;n-2)<\dfrac{b_1-\beta_1}{s\{b_1\}}<t(0.975;n-2)\right\}=0.95\]
+where \(s\{b_1\}=\sqrt{\dfrac{MSE}{SS_{XX}}}=0.469\)
+
+\(\therefore\quad\) the \(95\%\) confident interval of \(\beta_1\) is
+\((2.918388,5.081612)\)
+
+\paragraph{\texorpdfstring{(b) Conduct a \(t\) test to decide whether or
+not there is a linear association between number of times a carton is
+transferred (\(X\)) and number of broken ampules (\(Y\)). Use a level of
+significance of \(.05\). State the alternatives, decision rule, and
+conclusion. What is the \(P\)---value of the
+test?}{(b) Conduct a t test to decide whether or not there is a linear association between number of times a carton is transferred (X) and number of broken ampules (Y). Use a level of significance of .05. State the alternatives, decision rule, and conclusion. What is the P---value of the test?}}\label{b-conduct-a-t-test-to-decide-whether-or-not-there-is-a-linear-association-between-number-of-times-a-carton-is-transferred-x-and-number-of-broken-ampules-y.-use-a-level-of-significance-of-.05.-state-the-alternatives-decision-rule-and-conclusion.-what-is-the-pvalue-of-the-test}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = "y~x", data = data1)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+##   -2.2   -1.2    0.3    0.8    1.8 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  10.2000     0.6633  15.377 3.18e-07 ***
+## x             4.0000     0.4690   8.528 2.75e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.483 on 8 degrees of freedom
+## Multiple R-squared:  0.9009, Adjusted R-squared:  0.8885 
+## F-statistic: 72.73 on 1 and 8 DF,  p-value: 2.749e-05
+\end{verbatim}
+
+\[H_0:\beta_1=0\qquad\qquad H_1:\beta_1\neq 0\]
+\[t=\dfrac{b_1-0}{s\{b_1\}}\]
+
+If \(|t^*|\leqslant t(0.975;8)=2.306\) conclude \(H_0\), otherwise
+\(H_1\).
+
+\begin{align*}
+t^*&=\dfrac{b_1-0}{s\{b_1\}}\\
+&=8.528>2.306\\
+P(|t|<t^*)&=2.75\times 10^{-5}
+\end{align*}
+
+\(\therefore\quad\) conclude \(H_1\)
+
+\paragraph{\texorpdfstring{(c) \(\beta_0\) represents here the mean
+number of ampules broken when no transfers of the shipment are
+made---i.e., when \(X = 0\). Obtain a \(95\) percent confidence interval
+for \(\beta_0\) and interpret
+it.}{(c) \textbackslash{}beta\_0 represents here the mean number of ampules broken when no transfers of the shipment are made---i.e., when X = 0. Obtain a 95 percent confidence interval for \textbackslash{}beta\_0 and interpret it.}}\label{c-beta_0-represents-here-the-mean-number-of-ampules-broken-when-no-transfers-of-the-shipment-are-madei.e.-when-x-0.-obtain-a-95-percent-confidence-interval-for-beta_0-and-interpret-it.}
+
+\(\because\quad\beta_0=\overline{Y}-\beta_1\overline{X}\sim N\left(\beta_0,\sigma^2\frac{\sum\limits_{i=1}^nX_i^2}{nSS_{XX}}\right)=N\left(\beta_0,\sigma^2\left(\frac{1}{n}+\frac{\overline{X}^2}{SS_{XX}}\right)\right)\),
+\(\dfrac{(n-2)MSE}{\sigma^2}\sim\chi^2_{n-2},\) \(b_0\) and \(MSE\) are
+independent
+
+\(\therefore\quad\)
+\[\dfrac{\ \dfrac{b_0-{\beta}_0}{ \sqrt{{\sigma}^2 \left(\frac{1}{n}+\frac{\overline{X}^2}{SS_{XX}} \right)}} \  }{\dfrac{(n-2)MSE}{\sigma^2}}=\dfrac{b_0-\beta_0}{s\{b_0\}}\sim t(n-2)\]
+where
+\(s\{b_0\}=\sqrt{MSE \left(\frac{1}{n}+\frac{\overline{X}^2}{SS_{XX}} \right)}\).
+
+\(\because\quad\)
+\[Pr\left\{\left|\dfrac{b_0-\beta_0}{s\{b_0\}}\right|<t(0.975;n-2)\right\}=0.95\]
+where \(s\{b_0\}=0.663,b_0=10.2\)
+
+\(\therefore\quad\) the \(95\%\) confident interval of \(\beta_0\) is
+\((8.670370,11.729630)\)
+
+\paragraph{\texorpdfstring{(d) A consultant has suggested, on the basis
+of previous experience, that the mean number of broken ampules should
+not exceed \(9.0\) when no transfers are made. Conduct an appropriate
+test, using \(\alpha = .025\). State the alternatives, decision rule,
+and conclusion. What is the \(P\)---value of the
+test?}{(d) A consultant has suggested, on the basis of previous experience, that the mean number of broken ampules should not exceed 9.0 when no transfers are made. Conduct an appropriate test, using \textbackslash{}alpha = .025. State the alternatives, decision rule, and conclusion. What is the P---value of the test?}}\label{d-a-consultant-has-suggested-on-the-basis-of-previous-experience-that-the-mean-number-of-broken-ampules-should-not-exceed-9.0-when-no-transfers-are-made.-conduct-an-appropriate-test-using-alpha-.025.-state-the-alternatives-decision-rule-and-conclusion.-what-is-the-pvalue-of-the-test}
+
+\[H_0:\beta_0\leqslant 9\qquad\qquad H_1:\beta_1>9\]
+\[t=\dfrac{b_0-9}{s\{b_0\}}\] If \(t^*\leqslant t(0.975;8)=2.306\)
+conclude \(H_0\), otherwise \(H_1\).
+
+\(\because\quad\)
+
+\begin{align*}
+t^*&=\dfrac{b_0-9}{s\{b_1\}}\\
+&=1.810<2.306\\
+P(t<t^*)&=0.053
+\end{align*}
+
+\(\therefore\quad\) conclude \(H_0\)
+
+\paragraph{\texorpdfstring{(e) Obtain the power of your test in part (b)
+if actually \(\beta_1 = 2.0\). Assume \(\sigma\{b_1\} =.50\). Also
+obtain the power of your test in part (d) if actually \(\beta_0: 11\).
+Assume
+\(\sigma\{b_0\} = .75\).}{(e) Obtain the power of your test in part (b) if actually \textbackslash{}beta\_1 = 2.0. Assume \textbackslash{}sigma\textbackslash{}\{b\_1\textbackslash{}\} =.50. Also obtain the power of your test in part (d) if actually \textbackslash{}beta\_0: 11. Assume \textbackslash{}sigma\textbackslash{}\{b\_0\textbackslash{}\} = .75.}}\label{e-obtain-the-power-of-your-test-in-part-b-if-actually-beta_1-2.0.-assume-sigmab_1-.50.-also-obtain-the-power-of-your-test-in-part-d-if-actually-beta_0-11.-assume-sigmab_0-.75.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{delta1 =}\StringTok{ }\KeywordTok{abs}\NormalTok{(}\DecValTok{2}\OperatorTok{-}\DecValTok{0}\NormalTok{)}\OperatorTok{/}\FloatTok{0.5}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'delta1:%f'}\NormalTok{,delta1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "delta1:4.000000"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'s\{b1\}:%f'}\NormalTok{,}\FloatTok{0.4690}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "s{b1}:0.469000"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\KeywordTok{pt}\NormalTok{(}\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DecValTok{8}\NormalTok{,delta1)}\OperatorTok{+}\KeywordTok{pt}\NormalTok{(}\OperatorTok{-}\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DecValTok{8}\NormalTok{,delta1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9367429
+\end{verbatim}
+
+When \(\beta_1=2\), \(\sigma\{b_1\}=0.5\),
+\(\dfrac{b_1}{s\{b_1\}}\sim t(n-2;\delta_1)\),
+
+\begin{align*}
+Power&=Pr\left\{\left|\dfrac{b_1}{s\{b_1\}}\right|>t(0.975;n-2)\Big|\delta_1\right\}\\
+&=1-Pr\left\{-t(0.975;8)<\dfrac{b_1}{s\{b_1\}}<t(0.975;8)\Big|\delta_1\right\}\\
+&=0.9367429
+\end{align*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{delta0 =}\StringTok{ }\KeywordTok{abs}\NormalTok{(}\DecValTok{11}\OperatorTok{-}\DecValTok{9}\NormalTok{)}\OperatorTok{/}\FloatTok{0.75}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'delta0:%f'}\NormalTok{,delta0))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "delta0:2.666667"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'s\{b0\}:%f'}\NormalTok{,}\FloatTok{0.6633}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "s{b0}:0.663300"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\KeywordTok{pt}\NormalTok{(}\KeywordTok{qt}\NormalTok{(}\FloatTok{0.95}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DecValTok{8}\NormalTok{,delta0))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7844117
+\end{verbatim}
+
+When \(\beta_0=11\), \(\sigma\{b_0\}=0.75,\)
+\(\dfrac{b_0-9}{\sigma\{b_0\}}\sim t(n-2;\delta_0)\)
+
+\begin{align*}
+Power&=Pr\left\{\dfrac{b_0-9}{\sigma\{b_0\}}>t(0.975;n-2)\right\}\\
+&=1-Pr\left\{\dfrac{b_0-9}{\sigma\{b_0\}}\leqslant t(0.975;n-2)\right\}\\
+&=0.7844117
+\end{align*}
+
+\subsubsection{\texorpdfstring{2.15 Refer to \textbf{Airfreight
+breakage} Problem
+1.21.}{2.15 Refer to Airfreight breakage Problem 1.21.}}\label{refer-to-airfreight-breakage-problem-1.21.-1}
+
+\paragraph{\texorpdfstring{(a) Because of changes in airline routes,
+shipments may have to be transferred more frequently than in the past.
+Estimate the mean breakage for the following numbers of transfers:
+\(X=2, 4\). Use separate \(99\) percent confidence intervals. Interpret
+your
+results.}{(a) Because of changes in airline routes, shipments may have to be transferred more frequently than in the past. Estimate the mean breakage for the following numbers of transfers: X=2, 4. Use separate 99 percent confidence intervals. Interpret your results.}}\label{a-because-of-changes-in-airline-routes-shipments-may-have-to-be-transferred-more-frequently-than-in-the-past.-estimate-the-mean-breakage-for-the-following-numbers-of-transfers-x2-4.-use-separate-99-percent-confidence-intervals.-interpret-your-results.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{framex =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\NormalTok{pred_a =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{newdata =}\NormalTok{ framex,}\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{type =} \StringTok{"response"}\NormalTok{,}
+\DataTypeTok{interval =} \StringTok{"confidence"}\NormalTok{, }\DataTypeTok{level=}\FloatTok{0.99}\NormalTok{)}
+\NormalTok{pred_a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $fit
+##    fit      lwr      upr
+## 1 18.2 15.97429 20.42571
+## 2 26.2 21.22316 31.17684
+## 
+## $se.fit
+##        1        2 
+## 0.663325 1.483240 
+## 
+## $df
+## [1] 8
+## 
+## $residual.scale
+## [1] 1.48324
+\end{verbatim}
+
+\(\because\quad\) \(EY_h=\beta_0+\beta_1X_h\)
+
+\(\therefore\quad\)
+\(\hat{Y}_h=b_0+b_1X_h\sim N\left(\beta_0+\beta_1 X_h,\left[\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2\right)\)
+
+\(\because\quad\) \((b_0,b_1,\hat{Y}_h)\) and \(MSE\) are independent
+
+\(\therefore\quad\)
+
+\begin{align*}
+\dfrac{\ \dfrac{\hat{Y}_h-EY_h}{\sqrt{\left[\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2}}\ }{\sqrt{\dfrac{\ \dfrac{(n-2)MSE}{\sigma^2}\ }{n-2}}}&=\dfrac{\hat{Y}_h-EY_h}{\sqrt{MSE\left[\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]}}\\
+&=\dfrac{\hat{Y}-E\hat{Y}_h}{s\{\hat{Y}_h\}}\sim t(n-2)
+\end{align*}
+
+\(\therefore\quad\)
+\[Pr\left\{\left|\dfrac{\hat{Y}_h-EY_h}{s\{\hat{Y}_h\}}\right|<t(1-\frac{\alpha}{2};n-2)\right\}=1-\alpha\]
+
+Given \(X_h=2\),\[\hat{Y}_h=4\times 2+10.2=18.2\]
+\[s\{\hat{Y}_h\}=0.663325\] \[t(0.995;8)=3.355\] Therefore, the predict
+interval of \(\hat{Y}_h\) is \((15.97429,20.42571).\)
+
+Given \(X_h=4\), \[s\{\hat{Y}_h\}=1.483240 \]
+\[\hat{Y}_h=4\times 4+10.2=26.2\] \[t(0.995;8)=3.355\] Therefore, the
+predict interval of \(\hat{Y}_h\) is \((21.22316,31.17684)\).
+
+\paragraph{\texorpdfstring{(b) The next shipment will entail two
+transfers. Obtain a \(99\) percent prediction interval for the number of
+broken ampules for this shipment. Interpret your prediction
+interval.}{(b) The next shipment will entail two transfers. Obtain a 99 percent prediction interval for the number of broken ampules for this shipment. Interpret your prediction interval.}}\label{b-the-next-shipment-will-entail-two-transfers.-obtain-a-99-percent-prediction-interval-for-the-number-of-broken-ampules-for-this-shipment.-interpret-your-prediction-interval.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{framex =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{newdata =}\NormalTok{ framex,}\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{type =} \StringTok{"response"}\NormalTok{,}
+\DataTypeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\DataTypeTok{level=}\FloatTok{0.99}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $fit
+##    fit      lwr      upr
+## 1 18.2 12.74814 23.65186
+## 
+## $se.fit
+## [1] 0.663325
+## 
+## $df
+## [1] 8
+## 
+## $residual.scale
+## [1] 1.48324
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{newdata =}\NormalTok{ framex,}\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{type =} \StringTok{"response"}\NormalTok{,}
+\DataTypeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\DataTypeTok{level=}\FloatTok{0.99}\NormalTok{)}
+\NormalTok{s_pred =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{sum}\NormalTok{(}\KeywordTok{residuals}\NormalTok{(fit)}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{df.residual}\NormalTok{(fit)}\OperatorTok{+}\NormalTok{(pred}\OperatorTok{$}\NormalTok{se.fit)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'s\{pred\}:%f'}\NormalTok{,s_pred))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "s{pred}:1.624808"
+\end{verbatim}
+
+\(\because\quad\) \(Y_{h(new)}=\beta_0+\beta_1X_h+\epsilon_{h(new)}\)
+
+\(\therefore\quad\) \(Y_{h(new)}\sim N(\beta_0+\beta_1 X_h,\sigma^2)\)
+
+\(\because\quad\) the prediction of \(Y_{h(new)}\) is
+\(\hat{Y}_h=b_0+b_1X_h\sim N\left(0,\left[1+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2\right)\)
+
+\(\because\quad\) \((Y_{h(new)},\hat{Y}_h)\) and \(MSE\) are independent
+
+\(\therefore\quad\)
+
+\begin{align*}
+\dfrac{\ \dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{\sqrt{\left[1+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2}}\ }{\sqrt{\dfrac{\ \dfrac{(n-2)MSE}{\sigma^2}\ }{n-2}}}&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{\sqrt{MSE\left[1+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]}}\\
+&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{s\{\hat{Y}_h-EY_h\}}\\
+&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{s\{pred\}}\sim t(n-2)
+\end{align*}
+
+\(\therefore\quad\)
+\[Pr\left\{\left|\dfrac{\hat{Y}_h-EY_h}{s\{\hat{Y}_h-EY_h\}}\right|<t(1-\frac{\alpha}{2};n-2)\right\}=1-\alpha\]
+
+\(\because\quad\) \(s\{pred\}=1.624808\)
+
+\(\therefore\quad\) the prediction interval of \(Y_{h(new)}\) is
+\((12.74814,23.65186)\).
+
+\paragraph{\texorpdfstring{(c) In the next several days, three
+independent shipments will be made, each entailing two transfers. obtain
+a \(99\) percent prediction interval for the mean number of ampules
+broken for the three shipments. Convert this interval into a \(99\)
+percent prediction interval for the total number of ampules broken in
+the three
+shipments.}{(c) In the next several days, three independent shipments will be made, each entailing two transfers. obtain a 99 percent prediction interval for the mean number of ampules broken for the three shipments. Convert this interval into a 99 percent prediction interval for the total number of ampules broken in the three shipments.}}\label{c-in-the-next-several-days-three-independent-shipments-will-be-made-each-entailing-two-transfers.-obtain-a-99-percent-prediction-interval-for-the-mean-number-of-ampules-broken-for-the-three-shipments.-convert-this-interval-into-a-99-percent-prediction-interval-for-the-total-number-of-ampules-broken-in-the-three-shipments.}
+
+\(\therefore\quad\)
+
+\begin{align*}
+\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{\sqrt{MSE\left[\frac{1}{3}+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]}}&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{s\{predmean\}}\sim t(n-2)
+\end{align*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{framex =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{))}
+\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{newdata =}\NormalTok{ framex,}\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{type =} \StringTok{"terms"}\NormalTok{, }
+\DataTypeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\DataTypeTok{level=}\FloatTok{0.99}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $fit
+##   x
+## 1 4
+## attr(,"constant")
+## [1] 14.2
+## 
+## $se.fit
+##           x
+## 1 0.4690416
+## 
+## $lwr
+##           x
+## 1 -1.219758
+## attr(,"constant")
+## [1] 14.2
+## 
+## $upr
+##          x
+## 1 9.219758
+## attr(,"constant")
+## [1] 14.2
+## 
+## $df
+## [1] 8
+## 
+## $residual.scale
+## [1] 1.48324
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{newdata =}\NormalTok{ framex,}\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{type =} \StringTok{"response"}\NormalTok{,}
+\DataTypeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\DataTypeTok{level=}\FloatTok{0.99}\NormalTok{)}
+\NormalTok{s_predmean =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{sum}\NormalTok{(}\KeywordTok{residuals}\NormalTok{(fit)}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{df.residual}\NormalTok{(fit)}\OperatorTok{/}\DecValTok{3}\OperatorTok{+}\NormalTok{(pred}\OperatorTok{$}\NormalTok{se.fit)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'s\{predmean\}:%f'}\NormalTok{,s_pred))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "s{predmean}:1.624808"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'the prediction interval of Yh(new) is (%f,%f)'}\NormalTok{,pred}\OperatorTok{$}\NormalTok{fit[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}
+\KeywordTok{qt}\NormalTok{(.}\DecValTok{995}\NormalTok{, }\DataTypeTok{df=}\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{))}\OperatorTok{*}\NormalTok{s_predmean,pred}\OperatorTok{$}\NormalTok{fit[}\DecValTok{1}\NormalTok{]}\OperatorTok{+}\KeywordTok{qt}\NormalTok{(.}\DecValTok{995}\NormalTok{, }\DataTypeTok{df=}\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{))}\OperatorTok{*}\NormalTok{s_predmean))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "the prediction interval of Yh(new) is (14.565427,21.834573)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'the total number of broken ampules is (%f,%f)'}\NormalTok{,(pred}\OperatorTok{$}\NormalTok{fit[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}
+\KeywordTok{qt}\NormalTok{(.}\DecValTok{995}\NormalTok{, }\DataTypeTok{df=}\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{))}\OperatorTok{*}\NormalTok{s_predmean)}\OperatorTok{*}\DecValTok{3}\NormalTok{,(pred}\OperatorTok{$}\NormalTok{fit[}\DecValTok{1}\NormalTok{]}\OperatorTok{+}\KeywordTok{qt}\NormalTok{(.}\DecValTok{995}\NormalTok{, }\DataTypeTok{df=}\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{))}\OperatorTok{*}\NormalTok{s_predmean)}\OperatorTok{*}\DecValTok{3}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "the total number of broken ampules is (43.696282,65.503718)"
+\end{verbatim}
+
+\paragraph{\texorpdfstring{(d) Determine the boundary values of the
+\(99\) percent confidence band for the regression line when \(X_h = 2\)
+and when \(X_h = 4\). Is your confidence band wider at these two points
+than the corresponding confidence intervals in part (a)? Should it
+be?}{(d) Determine the boundary values of the 99 percent confidence band for the regression line when X\_h = 2 and when X\_h = 4. Is your confidence band wider at these two points than the corresponding confidence intervals in part (a)? Should it be?}}\label{d-determine-the-boundary-values-of-the-99-percent-confidence-band-for-the-regression-line-when-x_h-2-and-when-x_h-4.-is-your-confidence-band-wider-at-these-two-points-than-the-corresponding-confidence-intervals-in-part-a-should-it-be}
+
+\(\because\quad\) \[W=\sqrt{2F(1-\alpha;2,n-2)}\] \(\therefore\quad\)
+the Working-Hotelling Confidence Band is
+\[(\hat{Y}_h-Ws\{\hat{Y}_h\},\hat{Y}_h+Ws\{\hat{Y}_h\})\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{framex =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{seq}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\NormalTok{preds <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ framex, }\DataTypeTok{interval =} \StringTok{'confidence'}\NormalTok{,}\DataTypeTok{level=}\FloatTok{0.99}\NormalTok{,}\DataTypeTok{se.fit =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =}\NormalTok{ data1,}\DataTypeTok{xlim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{),}\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{40}\NormalTok{))}
+\KeywordTok{abline}\NormalTok{(fit)}
+\KeywordTok{points}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{),pred_a}\OperatorTok{$}\NormalTok{fit[,}\DecValTok{2}\NormalTok{],}\DataTypeTok{col=}\StringTok{'blue'}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{20}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{),pred_a}\OperatorTok{$}\NormalTok{fit[,}\DecValTok{3}\NormalTok{],}\DataTypeTok{col=}\StringTok{'blue'}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{20}\NormalTok{)}
+\CommentTok{#lines(seq(2,4,2), preds$fit[ ,3], lty = 'dashed', col = 'red',type = 'b')}
+\CommentTok{#lines(seq(2,4,2), preds$fit[ ,2], lty = 'dashed', col = 'red',type='b')}
+\NormalTok{w <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\KeywordTok{qf}\NormalTok{(}\FloatTok{0.99}\NormalTok{,}\DecValTok{2}\NormalTok{,fit}\OperatorTok{$}\NormalTok{df))}
+\NormalTok{band <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(preds}\OperatorTok{$}\NormalTok{fit}\OperatorTok{-}\NormalTok{w}\OperatorTok{*}\NormalTok{preds}\OperatorTok{$}\NormalTok{se.fit,preds}\OperatorTok{$}\NormalTok{fit}\OperatorTok{+}\NormalTok{w}\OperatorTok{*}\NormalTok{preds}\OperatorTok{$}\NormalTok{se.fit)}
+\KeywordTok{points}\NormalTok{(framex}\OperatorTok{$}\NormalTok{x,band[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{type =} \StringTok{'l'}\NormalTok{,}\DataTypeTok{lty=}\DecValTok{2}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(framex}\OperatorTok{$}\NormalTok{x,band[,}\DecValTok{4}\NormalTok{],}\DataTypeTok{type =} \StringTok{'l'}\NormalTok{,}\DataTypeTok{lty=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework_Chapter_2_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'W=%f'}\NormalTok{,w))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "W=4.159113"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'Confident band for X=2 is (%f,%f)'}\NormalTok{,band[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],band[}\DecValTok{1}\NormalTok{,}\DecValTok{4}\NormalTok{]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Confident band for X=2 is (15.441157,20.958843)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'Confident band for X=4 is (%f,%f)'}\NormalTok{,band[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{],band[}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Confident band for X=4 is (20.031038,32.368962)"
+\end{verbatim}
+
+Yes, they are both wider than intervals in (a).
+
+If \(F\sim F(1,n-2)\),\(T\sim t(n-2)\),then \(F=T^2\). Here
+\(F\sim F(2,n-2)\),\(T\sim t(n-2)\),,\(\sqrt{2F}\geqslant T\) since
+\(F(2,n-2)\) has heavier tail than \(F(1,n-1)\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{x<-}\KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DataTypeTok{length.out=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{y<-}\KeywordTok{pf}\NormalTok{(x,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{)}
+
+\KeywordTok{plot}\NormalTok{(x,y,}\DataTypeTok{col=}\StringTok{"red"}\NormalTok{,}\DataTypeTok{xlim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{),}\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DataTypeTok{type=}\StringTok{'l'}\NormalTok{,}
+     \DataTypeTok{xaxs=}\StringTok{"i"}\NormalTok{, }\DataTypeTok{yaxs=}\StringTok{"i"}\NormalTok{,}\DataTypeTok{ylab=}\StringTok{'cumulative density'}\NormalTok{,}\DataTypeTok{xlab=}\StringTok{''}\NormalTok{,}
+     \DataTypeTok{main=}\StringTok{"The F Cumulative Distribution Function"}\NormalTok{)}
+
+\KeywordTok{lines}\NormalTok{(x,}\KeywordTok{pf}\NormalTok{(x,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{),}\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+
+\KeywordTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{,}\DataTypeTok{legend=}
+\KeywordTok{paste}\NormalTok{(}\StringTok{"df1="}\NormalTok{,}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{),}\StringTok{"df2="}\NormalTok{,}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{),}\StringTok{" ncp="}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)), }\DataTypeTok{lwd=}\DecValTok{1}\NormalTok{, }\DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{,}\StringTok{"blue"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework_Chapter_2_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\subsection{\texorpdfstring{2.25 Refer to \textbf{Airfreight breakage}
+Problem
+1.21.}{2.25 Refer to Airfreight breakage Problem 1.21.}}\label{refer-to-airfreight-breakage-problem-1.21.-2}
+
+\paragraph{(a) Set up the ANOVA table. Which elements are
+additive?}\label{a-set-up-the-anova-table.-which-elements-are-additive}
+
+Given \[H_0:\beta_1=0\qquad\qquad H_1:\beta_1\neq 0\] \(\because\quad\)
+\[\sum\limits_{i=1}^n(Y_i-\overline{Y})^2=\sum\limits_{i=1}^n(Y_i-\hat{Y}_i)^2+\sum\limits_{i=1}^n(\hat{Y}_i-\overline{Y})^2\]
+\(\therefore\quad\) \[SSTO=SSR+SSE\] \(\because\quad\)
+\(\dfrac{SSE}{\sigma^2}\sim\chi^2(n-2),\)
+\(\dfrac{SSR}{\sigma^2}=b_1SS_{XX}\overset{H_0}{\sim}\chi^2(1)\),
+\(\dfrac{SSTO}{\sigma^2}\sim\chi^2(n-1)\) and
+\(\dfrac{SSE}{\sigma^2}\perp\dfrac{SSR}{\sigma^2}\)
+
+\(\therefore\quad\)
+\[F^*=\dfrac{\ \dfrac{SSR}{1}\ }{\dfrac{SSE}{n-2}}=\dfrac{MSR}{MSE}\overset{H_0}{\sim}F(1,n-2)\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{aov}\NormalTok{(fit))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value   Pr(>F)    
+## x            1  160.0   160.0   72.73 2.75e-05 ***
+## Residuals    8   17.6     2.2                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\paragraph{\texorpdfstring{(b) Conduct a \(F\) test to decide whether or
+not there is a linear association between the number of times a carton
+is transferred and the number of broken ampules; control the \(\alpha\)
+risk at \(.05\). State the alternatives, decision rule, and
+conclusion.}{(b) Conduct a F test to decide whether or not there is a linear association between the number of times a carton is transferred and the number of broken ampules; control the \textbackslash{}alpha risk at .05. State the alternatives, decision rule, and conclusion.}}\label{b-conduct-a-f-test-to-decide-whether-or-not-there-is-a-linear-association-between-the-number-of-times-a-carton-is-transferred-and-the-number-of-broken-ampules-control-the-alpha-risk-at-.05.-state-the-alternatives-decision-rule-and-conclusion.}
+
+\[H_0:\beta_1=0\qquad\qquad H_1:\beta_1\neq 0\] If
+\(F^*\leqslant F(1-\alpha;1,n-1)\) then conclude \(H_0\). Otherwise
+conclude \(H_1\).
+
+\(\because\quad\)
+
+\begin{align*}
+F^*&=\dfrac{MSR}{MSE}\\
+&=\dfrac{160}{2.2}\\
+&=72.73\\
+&>F(0.95;1,8)=5.32
+\end{align*}
+
+\(\therefore\quad\) conclude \(H_1\)
+
+\paragraph{\texorpdfstring{(c) Obtain the \(t^*\) statistic for the test
+in part (b) and demonstrate numerically its equivalence to the \(F^*\)
+statistic obtained in part
+(b).}{(c) Obtain the t\^{}* statistic for the test in part (b) and demonstrate numerically its equivalence to the F\^{}* statistic obtained in part (b).}}\label{c-obtain-the-t-statistic-for-the-test-in-part-b-and-demonstrate-numerically-its-equivalence-to-the-f-statistic-obtained-in-part-b.}
+
+\(\because\quad\) \[b_1\sim N(\beta_1,\frac{\sigma^2}{SS_{XX}})\]
+\(\therefore\quad\)
+\[t^*=\dfrac{b_1}{\sqrt{\frac{MSE}{SS_{XX}}}}\overset{H_0}{\sim} t(n-2)\]
+
+\begin{align*}
+t^*&=\dfrac{MSR}{MSE}\\
+&=\dfrac{160}{2.2}\\
+&=72.73\\
+&>F(0.95;1,8)=5.32
+\end{align*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SXX <-}\StringTok{ }\KeywordTok{sum}\NormalTok{((data1}\OperatorTok{$}\NormalTok{x }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(data1}\OperatorTok{$}\NormalTok{x))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{MSE <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(fit}\OperatorTok{$}\NormalTok{residuals}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{fit}\OperatorTok{$}\NormalTok{df}
+\NormalTok{t <-}\StringTok{ }\NormalTok{fit}\OperatorTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{] }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(MSE }\OperatorTok{/}\StringTok{ }\NormalTok{SXX)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'t value is %f'}\NormalTok{,t))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "t value is 8.528029"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'square t value is %f=F'}\NormalTok{,t}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "square t value is 72.727273=F"
+\end{verbatim}
+
+\paragraph{\texorpdfstring{(d) Calculate \(R^2\) and \(r\). What
+proportion of the variation in \(Y\) is accounted for by introducing
+\(X\) into the regression
+model?}{(d) Calculate R\^{}2 and r. What proportion of the variation in Y is accounted for by introducing X into the regression model?}}\label{d-calculate-r2-and-r.-what-proportion-of-the-variation-in-y-is-accounted-for-by-introducing-x-into-the-regression-model}
+
+\[r=\frac{SS_{XY}}{\sqrt{SS_{XX}SS_{YY}}}\] \[R^2=r^2\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'r:   %f'}\NormalTok{,}\KeywordTok{cor}\NormalTok{(data1}\OperatorTok{$}\NormalTok{x,data1}\OperatorTok{$}\NormalTok{y)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "r:   0.949158"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{'R^2: %f'}\NormalTok{,}\KeywordTok{cor}\NormalTok{(data1}\OperatorTok{$}\NormalTok{x,data1}\OperatorTok{$}\NormalTok{y)}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "R^2: 0.900901"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}
+\StringTok{'The proportion of variation in Y accounted for by introducting X into regression model'}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The proportion of variation in Y accounted for by introducting X into regression model"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{' is %f'}\NormalTok{,}\KeywordTok{cor}\NormalTok{(data1}\OperatorTok{$}\NormalTok{x,data1}\OperatorTok{$}\NormalTok{y)}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] " is 0.900901"
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{2.42 \textbf{Property assessments}. The
+data that follow show assessed value for property tax purposes (\(Υ_1\),
+in thousand dollars) and sales price (\(Y_2\), in thousand dollars) for
+a sample of \(15\) parcels of land for industrial development sold
+recently in ``arm's length'' transactions in a tax district. Assume that
+bivariate normal model (2.74) is appropriate
+here.}{2.42 Property assessments. The data that follow show assessed value for property tax purposes (Υ\_1, in thousand dollars) and sales price (Y\_2, in thousand dollars) for a sample of 15 parcels of land for industrial development sold recently in arm's length transactions in a tax district. Assume that bivariate normal model (2.74) is appropriate here.}}\label{property-assessments.-the-data-that-follow-show-assessed-value-for-property-tax-purposes-_1-in-thousand-dollars-and-sales-price-y_2-in-thousand-dollars-for-a-sample-of-15-parcels-of-land-for-industrial-development-sold-recently-in-arms-length-transactions-in-a-tax-district.-assume-that-bivariate-normal-model-2.74-is-appropriate-here.}
+
+\paragraph{(a) Plot the data in a scatter diagram. Does the bivariate
+normal model appear to be appropriate here?
+Discuss.}\label{a-plot-the-data-in-a-scatter-diagram.-does-the-bivariate-normal-model-appear-to-be-appropriate-here-discuss.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data2 <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"CH02PR42.txt"}\NormalTok{,}\DataTypeTok{head=}\OtherTok{FALSE}\NormalTok{,}\DataTypeTok{col.names =} \KeywordTok{c}\NormalTok{(}\StringTok{'Y1'}\NormalTok{,}\StringTok{'Y2'}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(data2)}
+\KeywordTok{points}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\KeywordTok{min}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1),}\KeywordTok{length}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1)),data2}\OperatorTok{$}\NormalTok{Y2,}\DataTypeTok{col=}\StringTok{'blue'}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{46}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1,}\KeywordTok{rep}\NormalTok{(}\KeywordTok{min}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y2),}\KeywordTok{length}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y2)),}\DataTypeTok{col=}\StringTok{'red'}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{46}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework_Chapter_2_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+The bivariate normal model is apprpriate because it looks lkie \(Y_1\)
+and \(Y_2\) share a high related coefficient \(\rho_{12}.\)
+
+\paragraph{\texorpdfstring{(b) Calculate \(r_{12}\). What parameter is
+estimated by \(r_{12}\)? What is the interpretation of this
+parameter?}{(b) Calculate r\_\{12\}. What parameter is estimated by r\_\{12\}? What is the interpretation of this parameter?}}\label{b-calculate-r_12.-what-parameter-is-estimated-by-r_12-what-is-the-interpretation-of-this-parameter}
+
+\(r_{12}=\dfrac{SS_{XY}}{\sqrt{SS_{XX}SS_{YY}}}\) is
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cor}\NormalTok{(data2)[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9528469
+\end{verbatim}
+
+\(\rho_{12}\) is estimated by \(r_{12}\). It is the related coefficient
+of \(Y_1\) and \(Y_2\).
+
+\paragraph{\texorpdfstring{(c) Test whether or not \(Y_1\) and \(Y_2\)
+are statistically independent in the population, using test statistic
+(2.87) and level of significance \(.01\). State the alternatives,
+decision rule, and
+conclusion.}{(c) Test whether or not Y\_1 and Y\_2 are statistically independent in the population, using test statistic (2.87) and level of significance .01. State the alternatives, decision rule, and conclusion.}}\label{c-test-whether-or-not-y_1-and-y_2-are-statistically-independent-in-the-population-using-test-statistic-2.87-and-level-of-significance-.01.-state-the-alternatives-decision-rule-and-conclusion.}
+
+\[H_0:\rho_{12}=0\qquad\qquad H_1:\rho_{12}\neq 0\]
+
+\begin{align*}
+t^*&=\dfrac{r_{12}}{\sqrt{\frac{1-r_{12}^2}{n-2}}}\\
+&=\dfrac{b_1}{\sqrt{\frac{MSE}{SS_{XX}}}}\\
+&=\dfrac{b_1}{s\{b_1\}}\overset{H_0}{\sim}t(n-2)
+\end{align*}
+
+If \(|t^*|\leqslant t(1-\frac{\alpha}{2};n-2)\) then conclude \(H_0\).
+Otherwise conclude \(H_1\).
+
+Here \(t^*=11.322>3.012\), thus conclude \(H_1\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cor.test}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1,data2}\OperatorTok{$}\NormalTok{Y2,}\DataTypeTok{conf.level=}\FloatTok{0.01}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Pearson's product-moment correlation
+## 
+## data:  data2$Y1 and data2$Y2
+## t = 11.322, df = 13, p-value = 4.187e-08
+## alternative hypothesis: true correlation is not equal to 0
+## 1 percent confidence interval:
+##  0.9525126 0.9531789
+## sample estimates:
+##       cor 
+## 0.9528469
+\end{verbatim}
+
+\paragraph{\texorpdfstring{(d) To test \(\rho_{12}= .6\) versus
+\(\rho_{12}\neq.6\), would it be appropriate to use test statistic
+(2.87)?}{(d) To test \textbackslash{}rho\_\{12\}= .6 versus \textbackslash{}rho\_\{12\}\textbackslash{}neq.6, would it be appropriate to use test statistic (2.87)?}}\label{d-to-test-rho_12-.6-versus-rho_12neq.6-would-it-be-appropriate-to-use-test-statistic-2.87}
+
+No, because the \(t\) test is based on
+\(\rho_{12}=0\qquad\Longleftrightarrow\qquad \beta_{12}=\beta_{21}=0\).
+
+\subsection{2.46 Refer to Property assessments Problem 2.42. There is
+some question as to whether or not bivariate model (2.74) is
+appropriate.}\label{refer-to-property-assessments-problem-2.42.-there-is-some-question-as-to-whether-or-not-bivariate-model-2.74-is-appropriate.}
+
+\paragraph{\texorpdfstring{(a) Obtain the Spearman rank correlation
+coefficient
+\(r_s\).}{(a) Obtain the Spearman rank correlation coefficient r\_s.}}\label{a-obtain-the-spearman-rank-correlation-coefficient-r_s.}
+
+Rank \((Y_{11},Y_{21},\cdots,Y_{n1})\) from \(1\) to \(n\) and label
+\((R_{11},\cdots,R_{n1}).\)
+
+Rank \((Y_{12},Y_{22},\cdots,Y_{n2})\) from \(1\) to \(n\) and label
+\((R_{12},\cdots,R_{n2}).\)
+
+\[r_S=\dfrac{\sum\limits_{i=1}^n(R_{i1}-\overline{R}_1)(R_{i2}-\overline{R}_2)}{\sqrt{\sum\limits_{i=1}^n(R_{i1}-\overline{R}_1)^2\sum\limits_{i=1}^n(R_{i2}-\overline{R}_2)^2}}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cor}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1,data2}\OperatorTok{$}\NormalTok{Y2,}\DataTypeTok{method =} \StringTok{"spearman"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9454874
+\end{verbatim}
+
+\paragraph{\texorpdfstring{(b) Test by means of the Spearman rank
+correlation coefficient whether an association exists between property
+assessments and sales prices using test statistic (2.101) with
+\(\alpha =.01\). State the alternatives, decision rule, and
+conclusion.}{(b) Test by means of the Spearman rank correlation coefficient whether an association exists between property assessments and sales prices using test statistic (2.101) with \textbackslash{}alpha =.01. State the alternatives, decision rule, and conclusion.}}\label{b-test-by-means-of-the-spearman-rank-correlation-coefficient-whether-an-association-exists-between-property-assessments-and-sales-prices-using-test-statistic-2.101-with-alpha-.01.-state-the-alternatives-decision-rule-and-conclusion.}
+
+To test \[H_0:\text{There is no association between $Y_1$ and $Y_2$}\]
+\[H_1:\text{There is an association between $Y_1$ and $Y_2$}\] use
+\[t^*=\dfrac{r_S}{\sqrt{\frac{1-r_S^2}{n-2}}}\] If
+\(|t^*|\leqslant t(1-\frac{\alpha}{2};n-2)\), conclude \(H_0\).
+Otherwise conclude \(H_1\).
+
+Here, \(r_S=10.46803>3.012276\), conclude \(H_1\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rs <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1,data2}\OperatorTok{$}\NormalTok{Y2,}\DataTypeTok{method =} \StringTok{"spearman"}\NormalTok{)}
+\NormalTok{t2 =}\StringTok{ }\NormalTok{rs}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\NormalTok{rs}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{(}\KeywordTok{length}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1)}\OperatorTok{-}\DecValTok{2}\NormalTok{))}
+\NormalTok{t2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10.46803
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{qt}\NormalTok{(.}\DecValTok{995}\NormalTok{, }\DataTypeTok{df=}\KeywordTok{length}\NormalTok{(data2}\OperatorTok{$}\NormalTok{Y1)}\OperatorTok{-}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.012276
+\end{verbatim}
+
+\paragraph{(c) How do your estimates and conclusions in parts (a) and
+(b) compare to those obtained in Problem
+2.42?}\label{c-how-do-your-estimates-and-conclusions-in-parts-a-and-b-compare-to-those-obtained-in-problem-2.42}
+
+The Pearson's Correlation Test is more precise than Spearman Rank
+Correlation Test. Pearson Correlation Coefficient only cares about
+linear relationship while Spearman Rank Correlation Coefficient cases
+about association between two groups of data.
+
+\subsubsection{2.53 (Calculus needed.)}\label{calculus-needed.}
+
+\paragraph{\texorpdfstring{(a) Obtain the likelihood function for the
+sample observations \(Y_1,\cdots, Υ_n\), given \(X_1 , \cdots, X_n\) the
+conditions on page 83
+apply.}{(a) Obtain the likelihood function for the sample observations Y\_1,\textbackslash{}cdots, Υ\_n, given X\_1 , \textbackslash{}cdots, X\_n the conditions on page 83 apply.}}\label{a-obtain-the-likelihood-function-for-the-sample-observations-y_1cdots-_n-given-x_1-cdots-x_n-the-conditions-on-page-83-apply.}
+
+\(\because\quad\) \[Y_i|X_i=x_i\sim N(\beta_0+\beta_1x_i,\sigma^2)\]
+\(\therefore\quad\)
+
+\begin{align*}
+L(\beta_0,\beta_1,\sigma^2|X_1,\cdots,X_n,Y_1,\cdots,Y_n)&=f_{Y_1,\cdots,Y_n|X_1,\cdots,X_n}(y_1,\cdots,y_n|x_1,\cdots,x_n)\\
+&=\prod\limits_{i=1}^nf(y_1|x_1)\\
+&=\prod\limits_{i=1}^n\dfrac{1}{(2\pi\sigma^2)^{\frac{1}{2}}}e^{-\frac{1}{2\sigma^2}(y_i-\beta_0-\beta_1x_i)^2}\\
+&=\dfrac{1}{(2\pi\sigma^2)^{\frac{n}{2}}}e^{-\frac{1}{2\sigma^2}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)^2}
+\end{align*}
+
+\paragraph{\texorpdfstring{(b) Obtain the maximum likelihood estimators
+of \(\beta_0,\beta_1\) and \(\sigma^2\). Are the estimators of
+\(\beta_0\) and \(\beta_1\) the same as those in (1.27) when the \(X_i\)
+are
+fixed?}{(b) Obtain the maximum likelihood estimators of \textbackslash{}beta\_0,\textbackslash{}beta\_1 and \textbackslash{}sigma\^{}2. Are the estimators of \textbackslash{}beta\_0 and \textbackslash{}beta\_1 the same as those in (1.27) when the X\_i are fixed?}}\label{b-obtain-the-maximum-likelihood-estimators-of-beta_0beta_1-and-sigma2.-are-the-estimators-of-beta_0-and-beta_1-the-same-as-those-in-1.27-when-the-x_i-are-fixed}
+
+\[\ln L=-\frac{n}{2}\ln(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)^2\]
+Let \[\begin{cases}
+\dfrac{\partial \ln L}{\partial \beta_0}=\dfrac{1}{\sigma^2}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)=0       \\
+\dfrac{\partial \ln L}{\partial \beta_1}= \dfrac{1}{\sigma^2}\sum\limits_{i=1}^nx_i(y_i-\beta_0-\beta_1x_i)=0      \\
+\dfrac{\partial \ln L}{\partial \sigma^2}=-\dfrac{n}{2\sigma^2}+\dfrac{1}{2\sigma^4}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)^2=0
+\end{cases}\] we get \[\begin{cases}
+\hat{\beta_0}=b_0    \\
+\hat{\beta_1}=b_1      \\
+\hat{\sigma^2}=\dfrac{\sum\limits_{i=1}^n(Y_i-\hat{Y_i})^2}{n}
+\end{cases}\] It is the same as (1.27).
+
+\subsubsection{2.57 The normal error regression model (2.1) is assumed
+to be
+applicable.}\label{the-normal-error-regression-model-2.1-is-assumed-to-be-applicable.}
+
+\paragraph{\texorpdfstring{(a) When testing \(H_0: \beta_1= 5\) versus
+\(H_a:\beta_1\neq 5\) by means of a general linear test, what is the
+reduced model? What are the degrees of freedom
+\(df_R\)?}{(a) When testing H\_0: \textbackslash{}beta\_1= 5 versus H\_a:\textbackslash{}beta\_1\textbackslash{}neq 5 by means of a general linear test, what is the reduced model? What are the degrees of freedom df\_R?}}\label{a-when-testing-h_0-beta_1-5-versus-h_abeta_1neq-5-by-means-of-a-general-linear-test-what-is-the-reduced-model-what-are-the-degrees-of-freedom-df_r}
+
+The reduced model is \[Y_i=\beta_0+5X_i+\epsilon_i\] \[df_{R}=n-1\]
+
+\paragraph{\texorpdfstring{(b) When testing
+\(H_0:\beta_0 = 2, \beta_1 = 5\) versus \(H_a:\) not both
+\(\beta_0 = 2\) and \(\beta_1=5\) by means of a general linear test,
+what is the reduced model? What are the degrees of freedom
+\(df_R\)?}{(b) When testing H\_0:\textbackslash{}beta\_0 = 2, \textbackslash{}beta\_1 = 5 versus H\_a: not both \textbackslash{}beta\_0 = 2 and \textbackslash{}beta\_1=5 by means of a general linear test, what is the reduced model? What are the degrees of freedom df\_R?}}\label{b-when-testing-h_0beta_0-2-beta_1-5-versus-h_a-not-both-beta_0-2-and-beta_15-by-means-of-a-general-linear-test-what-is-the-reduced-model-what-are-the-degrees-of-freedom-df_r}
+
+The reduced model is \[Y_i=2+5X_i+\epsilon_i\] \[df_{R}=n\]
+
+\subsubsection{2.59 (Calculus needed.)}\label{calculus-needed.-1}
+
+\paragraph{(a) Obtain the maximum likelihood estimators of the
+parameters of the bivariate normal distribution in
+(2.74).}\label{a-obtain-the-maximum-likelihood-estimators-of-the-parameters-of-the-bivariate-normal-distribution-in-2.74.}
+
+\(\because\quad\)
+\[f(Y_1,Y_2)=\dfrac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho_{12}^2}}e^{-\frac{1}{2(1-\rho_{12}^2)}\left[\left(\frac{Y_1-\mu_1}{\sigma_1}\right)-2\rho_{12}\left(\frac{Y_1-\mu_1}{\sigma_1}\right)\left(\frac{Y_2-\mu_2}{\sigma_2}\right)+\left(\frac{Y_2-\mu_2}{\sigma_2}\right)^2\right]}\]
+\(\therefore\quad\)
+
+\begin{align*}
+L(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{11},\cdots,y_{n1},y_{12},\cdots,y_{n2})&=\prod\limits_{i=1}^nf(y_{i1},y_{i2})\\
+&=\dfrac{1}{(2\pi\sigma_1\sigma_2)^{n}\sqrt{1-\rho_{12}^2}}e^{-\frac{1}{2(1-\rho_{12}^2)}\sum\limits_{i=1}^n\left[\left(\frac{y_{i1}-\mu_1}{\sigma_1}\right)^2-2\rho_{12}\left(\frac{y_{i1}-\mu_1}{\sigma_1}\right)\left(\frac{y_{i2}-\mu_2}{\sigma_2}\right)+\left(\frac{y_{i2}-\mu_2}{\sigma_2}\right)^2\right]}
+\end{align*}
+
+\paragraph{\texorpdfstring{(b) Using the results in part (a), obtain the
+maximum likelihood estimators of parameters of the conditional
+probability distribution of \(Υ_1\) for any value of \(Υ_2\) in
+(2.80).}{(b) Using the results in part (a), obtain the maximum likelihood estimators of parameters of the conditional probability distribution of Υ\_1 for any value of Υ\_2 in (2.80).}}\label{b-using-the-results-in-part-a-obtain-the-maximum-likelihood-estimators-of-parameters-of-the-conditional-probability-distribution-of-_1-for-any-value-of-_2-in-2.80.}
+
+\begin{align*}
+&L_{1|2}(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{11},\cdots,y_{n1}|y_{12},\cdots,y_{n2})\\
+=&\dfrac{L_{12}(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{11},\cdots,y_{n1},y_{12},\cdots,y_{n2})}{L_2(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{12},\cdots,y_{n2})}\\
+=&\dfrac{1}{(2\pi\sigma^2_{1|2})^{\frac{n}{2}}}e^{-\frac{1}{2}\sum\limits_{i=1}^n\left(\frac{y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2}}{\sigma_{1|2}}\right)^2}
+\end{align*}
+
+where \[\begin{cases}
+\alpha_{1|2}=\mu_1-\mu_2\rho_{12}\frac{\sigma_1}{\sigma_2}\\
+\beta_{12}=\rho_{12}\frac{\sigma_1}{\sigma_2}\\
+\sigma^2_{1|2}=\sigma_1^2(1-\rho_{12}^2)
+\end{cases}\]
+
+\paragraph{\texorpdfstring{(c) Show that the maximum likelihood
+estimators of \(\alpha_{1|2}\) and \(\beta_{12}\) obtained in part (b)
+are the same as the least squares estimators (1.10) for the regression
+coefficients in the simple linear regression
+model.}{(c) Show that the maximum likelihood estimators of \textbackslash{}alpha\_\{1\textbar{}2\} and \textbackslash{}beta\_\{12\} obtained in part (b) are the same as the least squares estimators (1.10) for the regression coefficients in the simple linear regression model.}}\label{c-show-that-the-maximum-likelihood-estimators-of-alpha_12-and-beta_12-obtained-in-part-b-are-the-same-as-the-least-squares-estimators-1.10-for-the-regression-coefficients-in-the-simple-linear-regression-model.}
+
+\[\ln L_{1|2}=-\frac{n}{2}\ln(2\pi\sigma^2_{1|2})-\frac{1}{2\sigma_{1|2}^2}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})^2\]
+Let \[\begin{cases}
+\dfrac{\partial\ln L_{1|2}}{\partial \alpha_{1|2}}=\frac{1}{\sigma_{1|2}^2}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})=0\\
+\dfrac{\partial\ln L_{1|2}}{\partial\beta_{12}}=\frac{1}{\sigma_{1|2}^2}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})y_{i2}=0\\
+\dfrac{\partial\ln L_{1|2}}{\partial\sigma^2_{1|2}}=-\frac{n}{2\sigma_{1|2}^2}+\frac{1}{2\sigma_{1|2}^4}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})^2=0
+\end{cases}\] we get \[\begin{cases}
+\hat{\beta}_{12}=\dfrac{\sum\limits_1^n(Y_{i1}-\overline{Y_1})^2(Y_{i2}-\overline{Y_2})^2}{\sum\limits_1^n(Y_{i2}-\overline{Y_2})^2}\\
+\hat{\alpha}_{1|2}=\overline{Y_1}-\beta_{12}\overline{Y_2}\\
+\hat{\sigma}_{1|2}^2=\dfrac{\sum\limits_{i=1}^n(Y_{i1}-\overline{Y_1})^2}{n}
+\end{cases}\] It is the same as the least squares estimators for the
+regression coefficients in the simple linear regression model.
+
+\subsubsection{2.60 Show that test statistics (2.17) and (2.87) are
+equivalent.}\label{show-that-test-statistics-2.17-and-2.87-are-equivalent.}
+
+\[t^*=\dfrac{b_1}{s\{b_1\}}\quad\Longleftrightarrow\quad t^*=\dfrac{r_{12}\sqrt{n-2}}{\sqrt{1-r_{12}^2}}\]
+
+\(\because\quad\)
+\[r_{12}=\dfrac{\sum\limits_{i}^n(Y_{i1}-\overline{Y}_1)(Y_{i2}-\overline{Y}_2)}{\sqrt{\left[\sum\limits_{i}^n(Y_{i1}-\overline{Y}_1)^2\right]\left[\sum\limits_{i}^n(Y_{i2}-\overline{Y}_2)^2\right]}}\]
+Let \(Y_{i1}=Y_i,Y_{i2}=X_i\), we have
+\[r_{12}=\dfrac{\sum\limits_{i}^n(Y_{i}-\overline{Y})(X_{i}-\overline{X})}{\sqrt{\left[\sum\limits_{i}^n(Y_{i}-\overline{Y})^2\right]\left[\sum\limits_{i}^n(X_{i}-\overline{X})^2\right]}}\]
+\(\therefore\quad\)
+
+\begin{align*}
+b_1&=\dfrac{\sum\limits_{i}^n(Y_{i}-\overline{Y})(X_{i}-\overline{X})}{\sum\limits_{i}^n(X_{i}-\overline{X})^2}\\
+&=r_{12}\left[\dfrac{\sum\limits_{i}^n(Y_{i}-\overline{Y})^2}{\sum\limits_{i}^n(X_{i}-\overline{X})^2}\right]^{\frac{1}{2}}\\
+&=r_{12}\sqrt{\dfrac{SS_{YY}}{SS_{XX}}}\\
+MSE&=\dfrac{SSE}{n-2}\\
+&=\dfrac{SSTO-SSR}{n-2}\\
+&=\dfrac{1}{n-2}(SS_{YY}-b_1^2SS_{XX})\\
+&=\dfrac{(1-r_{12}^2)SS_{YY}}{n-2}\\
+s\{b_1\}&=\sqrt{\dfrac{MSE}{SS_{XX}}}\\
+&=\sqrt{\dfrac{(1-r_{12}^2)SS_{YY}}{(n-2)SS_{XX}}}\\
+t^*&=\dfrac{b_1}{s\{b_1\}}\\
+&=\dfrac{r_{12}\sqrt{n-2}}{\sqrt{1-r_{12}^2}}
+\end{align*}
+
+
+\end{document}

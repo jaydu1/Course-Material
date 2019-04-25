@@ -1,0 +1,480 @@
+---
+title: "Homework Chapter 2"
+author: "Jinhong Du 15338039"
+output:
+  html_document: default
+  header-includes: \usepackage{amsmath}
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+---
+
+### 1 求$Es\{b_1\}$，证明它不是无偏估计
+
+$\because\quad$ $\dfrac{(n-2)MSE}{\sigma^2}\sim\chi^2(n-2)$
+
+$\therefore\quad$ $\dfrac{(n-2)SS_{XX}s^2\{b_1\}}{\sigma^2}\sim\chi^2(n-2)$
+
+$\therefore\quad$
+\begin{align*}
+E\left(\sqrt{\dfrac{(n-2)SS_{XX}s^2\{b_1\}}{\sigma^2}}\right)&=\int_0^{\infty}\dfrac{1}{\Gamma(\frac{n-2}{2})2^{\frac{n-2}{2}}}x^{\frac{n-2}{2}-1}e^{-\frac{x}{2}} x^{\frac{1}{2}}\mathrm{d}x\\
+&=\dfrac{\Gamma(\frac{n-2}{2})2^{\frac{n-2}{2}}}{\Gamma(\frac{n-1}{2})2^{\frac{n-1}{2}}}\int_0^{\infty}\dfrac{1}{\Gamma(\frac{n-1}{2})2^{\frac{n-1}{2}}}x^{\frac{n-1}{2}-1}e^{-\frac{x}{2}} \mathrm{d}x\\
+&=\dfrac{\Gamma(\frac{n-2}{2})}{\Gamma(\frac{n-1}{2})2^{\frac{1}{2}}}
+\end{align*}
+$\therefore\quad$ $$E(s\{b_1\})=\sqrt{\dfrac{\sigma^2}{2(n-2)SS_{XX}}}\dfrac{\Gamma(\frac{n-2}{2})}{\Gamma(\frac{n-1}{2})}\neq \sigma$$
+$\therefore\quad$  $s\{b_1\}$ is not a unbiased estimator of $\sigma$
+
+### 2 证明$$\max\limits_{X_h}\frac{\left(\frac{\hat{Y}_h-\mathbb{E}Y_h}{s\{\hat{Y}_h\}}\right)^2}{2}\sim F(2,n-2),$$其中$s\{\hat{Y}_h\}=\sqrt{MSE\left(\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right)}$
+
+$\because\quad$ $$\max\limits_{t}\dfrac{(a+bt)^2}{c+dt^2}=\dfrac{a^2}{c}+\dfrac{b^2}{d}$$
+
+$\therefore\quad$ \begin{align*}
+\max\limits_i\frac{1}{2}\left(\frac{\hat{Y}_h-\mathbb{E}Y_h}{s\{\hat{Y}_h\}}\right)^2&=\max\limits_i\frac{1}{2} \dfrac{[(\hat{\beta}_0+\hat{\beta}_1X_h)-(\beta_0+\beta_1X_h)]^2}{MSE\left(\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right)}\\
+&=\max\limits_i\frac{1}{2} \dfrac{[(\overline{Y}-\mathbb{E}\overline{Y})+(\hat{\beta_1}-\beta_1)(X_h-\overline{X})]^2}{MSE\left(\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right)}\\
+&=\frac{1}{2MSE}\dfrac{(\overline{Y}-\mathbb{E}\overline{Y})^2}{\frac{1}{n}}+\frac{1}{2MSE}\dfrac{(\hat{\beta_1}-\beta_1)^2}{\frac{1}{SS_{XX}}}\\
+&=\dfrac{\dfrac{\left(\frac{\overline{Y}-\mathbb{E}\overline{Y}}{\sqrt{\frac{\sigma^2}{n}}}\right)^2+\left(\frac{\hat{\beta_1}-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\right)^2}{2}}{\dfrac{\dfrac{SSE}{\sigma^2}}{n-2}}
+\end{align*}
+
+$\because\quad$ $\left(\frac{\overline{Y}-\mathbb{E}\overline{Y}}{\sqrt{\frac{\sigma^2}{n}}}\right)^2\sim\chi^2(1),\ \left(\frac{\hat{\beta_1}-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\right)^2\sim\chi^2(1),\ \dfrac{MSE}{\sigma^2}\sim\chi^2(n-2)$
+
+$\therefore\quad$ 
+$$\max\limits_{X_h}\frac{\left(\frac{\hat{Y}_h-\mathbb{E}Y_h}{s\{\hat{Y}_h\}}\right)^2}{2}\sim F(2,n-2)$$
+
+### 3 
+$$(X,Y)\sim N(\mu_1,\mu_2,\sigma_1,\sigma_2,\rho)$$
+$$H_0:\rho=0.3\qquad H_1:\rho\neq 0.3$$
+Do the Fisher z transformation$$z'=\frac{1}{2}\ln\left(\dfrac{1+r_{12}}{1-r_{12}}\right)$$
+When $n$ is large, approximately $$z'\overset{\cdot}{\sim} N\left(\xi,\dfrac{1}{n-3}\right)$$
+where $$\xi=\dfrac{1}{2}\ln\left(\dfrac{1+\rho_{12}}{1-\rho_{12}}\right)$$ 
+$\because\quad$ $$\rho_{12}=\lim\limits_{\xi\rightarrow\infty}\dfrac{e^{2\xi}-1}{e^{2\xi}+1}$$
+$\therefore\quad$ $$\mathbb{P}\left(\dfrac{|z'-\xi|}{\sqrt{\frac{1}{n-3}}}<z(1-\frac{\alpha}{2})\right)=1-\alpha$$
+Here, the transform correlation is $$z'=\dfrac{1}{2}\ln\left(\dfrac{1+0.3}{1-0.3}\right)=0.1783375$$
+$\therefore\quad$ the $100(1-\alpha)\%$ confidence interval of $\xi$ is $(z'-z(1-\frac{\alpha}{2})\sqrt{\frac{1}{n-3}},z'+z(1-\frac{\alpha}{2})\sqrt{\frac{1}{n-3}})=(c_1,c_2)$
+
+$\therefore\quad$ the $100(1-\alpha)\%$ confidence interval of $\rho_{12}$ is $\left(\dfrac{e^{2c_1}-1}{e^{2c_1}+1},\dfrac{e^{2c_2}-1}{e^{2c_2}+1}\right)$
+
+### 2.6 Refer to **Airfreight breakage** Problem 1.21.
+#### (a) Estimate $\beta_1$ with a $95$ percent confidence interval. Interpret your interval estimate.
+```{r}
+x <- c(1, 0, 2, 0, 3, 1, 0, 1, 2, 0)
+y <- c(16, 9, 17, 12, 22, 13, 8, 15, 19, 11)
+data1 <- data.frame(x,y)
+fit <- lm('y~x',data1)
+confint(fit) 
+```
+$\because\quad\beta_1\sim N(\beta_1,\frac{\sigma^2}{SS_{XX}})$
+
+$\therefore\quad \dfrac{b_1-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\sim N(0,1)$
+
+$\because\quad\dfrac{(n-2)MSE}{\sigma^2}\sim \chi^2_{n-2}$, $b_1$ and $MSE$ are independent
+
+$\therefore\quad$ $\dfrac{\ \dfrac{b_1-\beta_1}{\sqrt{\frac{\sigma^2}{SS_{XX}}}}\ }{\dfrac{(n-2)MSE}{\sigma^2}}=\dfrac{b_1-\beta_1}{\sqrt{\dfrac{MSE}{SS_{XX}}}}\sim t(n-2)$
+
+$\because\quad$ $$Pr\left\{t(0.025;n-2)<\dfrac{b_1-\beta_1}{s\{b_1\}}<t(0.975;n-2)\right\}=0.95$$
+where $s\{b_1\}=\sqrt{\dfrac{MSE}{SS_{XX}}}=0.469$
+
+$\therefore\quad$ the $95\%$ confident interval of $\beta_1$ is $(2.918388,5.081612)$
+
+#### (b) Conduct a $t$ test to decide whether or not there is a linear association between number of times a carton is transferred ($X$) and number of broken ampules ($Y$). Use a level of significance of $.05$. State the alternatives, decision rule, and conclusion. What is the $P$—value of the test?
+```{r}
+summary(fit)
+```
+$$H_0:\beta_1=0\qquad\qquad H_1:\beta_1\neq 0$$
+$$t=\dfrac{b_1-0}{s\{b_1\}}$$
+
+If $|t^*|\leqslant t(0.975;8)=2.306$ conclude $H_0$, otherwise $H_1$.
+
+\begin{align*}
+t^*&=\dfrac{b_1-0}{s\{b_1\}}\\
+&=8.528>2.306\\
+P(|t|<t^*)&=2.75\times 10^{-5}
+\end{align*}
+$\therefore\quad$ conclude $H_1$
+
+#### (c) $\beta_0$ represents here the mean number of ampules broken when no transfers of the shipment are made—i.e., when $X = 0$. Obtain a $95$ percent confidence interval for $\beta_0$ and interpret it.
+$\because\quad\beta_0=\overline{Y}-\beta_1\overline{X}\sim N\left(\beta_0,\sigma^2\frac{\sum\limits_{i=1}^nX_i^2}{nSS_{XX}}\right)=N\left(\beta_0,\sigma^2\left(\frac{1}{n}+\frac{\overline{X}^2}{SS_{XX}}\right)\right)$, 
+$\dfrac{(n-2)MSE}{\sigma^2}\sim\chi^2_{n-2},$ $b_0$ and $MSE$ are independent
+
+$\therefore\quad$ $$\dfrac{\ \dfrac{b_0-{\beta}_0}{ \sqrt{{\sigma}^2 \left(\frac{1}{n}+\frac{\overline{X}^2}{SS_{XX}} \right)}} \  }{\dfrac{(n-2)MSE}{\sigma^2}}=\dfrac{b_0-\beta_0}{s\{b_0\}}\sim t(n-2)$$
+where $s\{b_0\}=\sqrt{MSE \left(\frac{1}{n}+\frac{\overline{X}^2}{SS_{XX}} \right)}$.
+
+$\because\quad$ $$Pr\left\{\left|\dfrac{b_0-\beta_0}{s\{b_0\}}\right|<t(0.975;n-2)\right\}=0.95$$
+where $s\{b_0\}=0.663,b_0=10.2$
+
+$\therefore\quad$ the $95\%$ confident interval of $\beta_0$ is $(8.670370,11.729630)$
+
+#### (d) A consultant has suggested, on the basis of previous experience, that the mean number of broken ampules should not exceed $9.0$ when no transfers are made. Conduct an appropriate test, using $\alpha = .025$. State the alternatives, decision rule, and conclusion. What is the $P$—value of the test?
+$$H_0:\beta_0\leqslant 9\qquad\qquad H_1:\beta_1>9$$
+$$t=\dfrac{b_0-9}{s\{b_0\}}$$
+If $t^*\leqslant t(0.975;8)=2.306$ conclude $H_0$, otherwise $H_1$.
+
+$\because\quad$
+\begin{align*}
+t^*&=\dfrac{b_0-9}{s\{b_1\}}\\
+&=1.810<2.306\\
+P(t<t^*)&=0.053
+\end{align*}
+$\therefore\quad$ conclude $H_0$
+
+#### (e) Obtain the power of your test in part (b) if actually $\beta_1 = 2.0$. Assume $\sigma\{b_1\} =.50$. Also obtain the power of your test in part (d) if actually $\beta_0: 11$. Assume $\sigma\{b_0\} = .75$.
+```{r}
+delta1 = abs(2-0)/0.5
+print(sprintf('delta1:%f',delta1))
+print(sprintf('s{b1}:%f',0.4690))
+print(1-pt(qt(0.975,8),8,delta1)+pt(-qt(0.975,8),8,delta1))
+```
+
+When $\beta_1=2$, $\sigma\{b_1\}=0.5$, $\dfrac{b_1}{s\{b_1\}}\sim t(n-2;\delta_1)$,
+\begin{align*}
+Power&=Pr\left\{\left|\dfrac{b_1}{s\{b_1\}}\right|>t(0.975;n-2)\Big|\delta_1\right\}\\
+&=1-Pr\left\{-t(0.975;8)<\dfrac{b_1}{s\{b_1\}}<t(0.975;8)\Big|\delta_1\right\}\\
+&=0.9367429
+\end{align*}
+
+```{r}
+delta0 = abs(11-9)/0.75
+print(sprintf('delta0:%f',delta0))
+print(sprintf('s{b0}:%f',0.6633))
+print(1-pt(qt(0.95,8),8,delta0))
+```
+
+When $\beta_0=11$, $\sigma\{b_0\}=0.75,$ $\dfrac{b_0-9}{\sigma\{b_0\}}\sim t(n-2;\delta_0)$ 
+\begin{align*}
+Power&=Pr\left\{\dfrac{b_0-9}{\sigma\{b_0\}}>t(0.975;n-2)\right\}\\
+&=1-Pr\left\{\dfrac{b_0-9}{\sigma\{b_0\}}\leqslant t(0.975;n-2)\right\}\\
+&=0.7844117
+\end{align*}
+
+### 2.15 Refer to **Airfreight breakage** Problem 1.21.
+#### (a) Because of changes in airline routes, shipments may have to be transferred more frequently than in the past. Estimate the mean breakage for the following numbers of transfers: $X=2, 4$. Use separate $99$ percent confidence intervals. Interpret your results.
+```{r}
+framex = data.frame(x=c(2,4))
+pred_a = predict(fit,newdata = framex,se.fit = TRUE,type = "response",
+interval = "confidence", level=0.99)
+pred_a
+```
+
+$\because\quad$ $EY_h=\beta_0+\beta_1X_h$
+
+$\therefore\quad$ $\hat{Y}_h=b_0+b_1X_h\sim N\left(\beta_0+\beta_1 X_h,\left[\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2\right)$
+
+$\because\quad$ $(b_0,b_1,\hat{Y}_h)$ and $MSE$ are independent
+
+$\therefore\quad$ \begin{align*}
+\dfrac{\ \dfrac{\hat{Y}_h-EY_h}{\sqrt{\left[\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2}}\ }{\sqrt{\dfrac{\ \dfrac{(n-2)MSE}{\sigma^2}\ }{n-2}}}&=\dfrac{\hat{Y}_h-EY_h}{\sqrt{MSE\left[\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]}}\\
+&=\dfrac{\hat{Y}-E\hat{Y}_h}{s\{\hat{Y}_h\}}\sim t(n-2)
+\end{align*}
+
+$\therefore\quad$ $$Pr\left\{\left|\dfrac{\hat{Y}_h-EY_h}{s\{\hat{Y}_h\}}\right|<t(1-\frac{\alpha}{2};n-2)\right\}=1-\alpha$$
+
+Given $X_h=2$,$$\hat{Y}_h=4\times 2+10.2=18.2$$
+$$s\{\hat{Y}_h\}=0.663325$$
+$$t(0.995;8)=3.355$$
+Therefore, the predict interval of $\hat{Y}_h$ is $(15.97429,20.42571).$
+
+Given $X_h=4$,
+$$s\{\hat{Y}_h\}=1.483240 $$
+$$\hat{Y}_h=4\times 4+10.2=26.2$$
+$$t(0.995;8)=3.355$$
+Therefore, the predict interval of $\hat{Y}_h$ is $(21.22316,31.17684)$.
+
+#### (b) The next shipment will entail two transfers. Obtain a $99$ percent prediction interval for the number of broken ampules for this shipment. Interpret your prediction interval.
+```{r}
+framex = data.frame(x=c(2))
+predict(fit,newdata = framex,se.fit = TRUE,type = "response",
+interval = "prediction", level=0.99)
+```
+```{r}
+pred <- predict(fit,newdata = framex,se.fit = TRUE,type = "response",
+interval = "prediction", level=0.99)
+s_pred = sqrt(sum(residuals(fit)^2) / df.residual(fit)+(pred$se.fit)^2)
+print(sprintf('s{pred}:%f',s_pred))
+```
+
+$\because\quad$ $Y_{h(new)}=\beta_0+\beta_1X_h+\epsilon_{h(new)}$
+
+$\therefore\quad$ $Y_{h(new)}\sim N(\beta_0+\beta_1 X_h,\sigma^2)$
+
+$\because\quad$ the prediction of $Y_{h(new)}$ is $\hat{Y}_h=b_0+b_1X_h\sim N\left(0,\left[1+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2\right)$
+
+$\because\quad$ $(Y_{h(new)},\hat{Y}_h)$ and $MSE$ are independent
+
+$\therefore\quad$ \begin{align*}
+\dfrac{\ \dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{\sqrt{\left[1+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]\sigma^2}}\ }{\sqrt{\dfrac{\ \dfrac{(n-2)MSE}{\sigma^2}\ }{n-2}}}&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{\sqrt{MSE\left[1+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]}}\\
+&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{s\{\hat{Y}_h-EY_h\}}\\
+&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{s\{pred\}}\sim t(n-2)
+\end{align*}
+
+$\therefore\quad$ $$Pr\left\{\left|\dfrac{\hat{Y}_h-EY_h}{s\{\hat{Y}_h-EY_h\}}\right|<t(1-\frac{\alpha}{2};n-2)\right\}=1-\alpha$$
+
+$\because\quad$ $s\{pred\}=1.624808$
+
+$\therefore\quad$ the prediction interval of $Y_{h(new)}$ is $(12.74814,23.65186)$.
+
+#### (c) In the next several days, three independent shipments will be made, each entailing two transfers. obtain a $99$ percent prediction interval for the mean number of ampules broken for the three shipments. Convert this interval into a $99$ percent prediction interval for the total number of ampules broken in the three shipments.
+$\therefore\quad$ \begin{align*}
+\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{\sqrt{MSE\left[\frac{1}{3}+\frac{1}{n}+\frac{(X_h-\overline{X})^2}{SS_{XX}}\right]}}&=\dfrac{\hat{Y}_{h(new)}-\hat{Y}_h}{s\{predmean\}}\sim t(n-2)
+\end{align*}
+```{r}
+framex = data.frame(x=c(2))
+predict(fit,newdata = framex,se.fit = TRUE,type = "terms", 
+interval = "prediction", level=0.99)
+```
+```{r}
+pred <- predict(fit,newdata = framex,se.fit = TRUE,type = "response",
+interval = "prediction", level=0.99)
+s_predmean = sqrt(sum(residuals(fit)^2) / df.residual(fit)/3+(pred$se.fit)^2)
+print(sprintf('s{predmean}:%f',s_pred))
+print(sprintf('the prediction interval of Yh(new) is (%f,%f)',pred$fit[1]-
+qt(.995, df=c(8))*s_predmean,pred$fit[1]+qt(.995, df=c(8))*s_predmean))
+print(sprintf('the total number of broken ampules is (%f,%f)',(pred$fit[1]-
+qt(.995, df=c(8))*s_predmean)*3,(pred$fit[1]+qt(.995, df=c(8))*s_predmean)*3))
+```
+
+#### (d) Determine the boundary values of the $99$ percent confidence band for the regression line when $X_h = 2$ and when $X_h = 4$. Is your confidence band wider at these two points than the corresponding confidence intervals in part (a)? Should it be?
+$\because\quad$
+$$W=\sqrt{2F(1-\alpha;2,n-2)}$$
+$\therefore\quad$ the Working-Hotelling Confidence Band is $$(\hat{Y}_h-Ws\{\hat{Y}_h\},\hat{Y}_h+Ws\{\hat{Y}_h\})$$
+```{r}
+framex = data.frame(x=seq(2,4,2))
+preds <- predict(fit, newdata = framex, interval = 'confidence',level=0.99,se.fit = TRUE)
+plot(y ~ x, data = data1,xlim=c(0,4),ylim=c(8,40))
+abline(fit)
+points(seq(2,4,2),pred_a$fit[,2],col='blue',pch=20)
+points(seq(2,4,2),pred_a$fit[,3],col='blue',pch=20)
+#lines(seq(2,4,2), preds$fit[ ,3], lty = 'dashed', col = 'red',type = 'b')
+#lines(seq(2,4,2), preds$fit[ ,2], lty = 'dashed', col = 'red',type='b')
+w <- sqrt(2*qf(0.99,2,fit$df))
+band <- cbind(preds$fit-w*preds$se.fit,preds$fit+w*preds$se.fit)
+points(framex$x,band[,1],type = 'l',lty=2)
+points(framex$x,band[,4],type = 'l',lty=2)
+print(sprintf('W=%f',w))
+print(sprintf('Confident band for X=2 is (%f,%f)',band[1,1],band[1,4]))
+print(sprintf('Confident band for X=4 is (%f,%f)',band[2,1],band[2,4]))
+```
+
+Yes, they are both wider than intervals in (a).
+
+If $F\sim F(1,n-2)$,$T\sim t(n-2)$,then $F=T^2$. Here $F\sim F(2,n-2)$,$T\sim t(n-2)$,,$\sqrt{2F}\geqslant T$ since $F(2,n-2)$ has heavier tail than $F(1,n-1)$.
+```{r}
+set.seed(1)
+x<-seq(0,5,length.out=1000)
+y<-pf(x,1,1,0)
+
+plot(x,y,col="red",xlim=c(0,5),ylim=c(0,1),type='l',
+     xaxs="i", yaxs="i",ylab='cumulative density',xlab='',
+     main="The F Cumulative Distribution Function")
+
+lines(x,pf(x,2,1,0),col="blue")
+
+legend("bottomright",legend=
+paste("df1=",c(1,1),"df2=",c(2,1)," ncp=", c(0,0)), lwd=1, col=c("red","blue"))
+```
+
+## 2.25 Refer to **Airfreight breakage** Problem 1.21.
+#### (a) Set up the ANOVA table. Which elements are additive?
+Given $$H_0:\beta_1=0\qquad\qquad H_1:\beta_1\neq 0$$
+$\because\quad$ $$\sum\limits_{i=1}^n(Y_i-\overline{Y})^2=\sum\limits_{i=1}^n(Y_i-\hat{Y}_i)^2+\sum\limits_{i=1}^n(\hat{Y}_i-\overline{Y})^2$$
+$\therefore\quad$ $$SSTO=SSR+SSE$$
+$\because\quad$ $\dfrac{SSE}{\sigma^2}\sim\chi^2(n-2),$ $\dfrac{SSR}{\sigma^2}=b_1SS_{XX}\overset{H_0}{\sim}\chi^2(1)$,  $\dfrac{SSTO}{\sigma^2}\sim\chi^2(n-1)$ and $\dfrac{SSE}{\sigma^2}\perp\dfrac{SSR}{\sigma^2}$
+
+$\therefore\quad$ $$F^*=\dfrac{\ \dfrac{SSR}{1}\ }{\dfrac{SSE}{n-2}}=\dfrac{MSR}{MSE}\overset{H_0}{\sim}F(1,n-2)$$
+```{r}
+summary(aov(fit))
+```
+
+#### (b) Conduct a $F$ test to decide whether or not there is a linear association between the number of times a carton is transferred and the number of broken ampules; control the $\alpha$ risk at $.05$. State the alternatives, decision rule, and conclusion.
+$$H_0:\beta_1=0\qquad\qquad H_1:\beta_1\neq 0$$
+If $F^*\leqslant F(1-\alpha;1,n-1)$ then conclude $H_0$. Otherwise conclude $H_1$.
+
+$\because\quad$ \begin{align*}
+F^*&=\dfrac{MSR}{MSE}\\
+&=\dfrac{160}{2.2}\\
+&=72.73\\
+&>F(0.95;1,8)=5.32
+\end{align*}
+$\therefore\quad$ conclude $H_1$
+
+#### (c) Obtain the $t^*$ statistic for the test in part (b) and demonstrate numerically its equivalence to the $F^*$ statistic obtained in part (b).
+$\because\quad$ $$b_1\sim N(\beta_1,\frac{\sigma^2}{SS_{XX}})$$
+$\therefore\quad$ $$t^*=\dfrac{b_1}{\sqrt{\frac{MSE}{SS_{XX}}}}\overset{H_0}{\sim} t(n-2)$$
+\begin{align*}
+t^*&=\dfrac{MSR}{MSE}\\
+&=\dfrac{160}{2.2}\\
+&=72.73\\
+&>F(0.95;1,8)=5.32
+\end{align*}
+```{r}
+SXX <- sum((data1$x - mean(data1$x))^2)
+MSE <- sum(fit$residuals^2)/fit$df
+t <- fit$coefficients[2] / sqrt(MSE / SXX)
+print(sprintf('t value is %f',t))
+print(sprintf('square t value is %f=F',t^2))
+
+```
+
+#### (d) Calculate $R^2$ and $r$. What proportion of the variation in $Y$ is accounted for by introducing $X$ into the regression model?
+$$r=\frac{SS_{XY}}{\sqrt{SS_{XX}SS_{YY}}}$$
+$$R^2=r^2$$
+```{r}
+print(sprintf('r:   %f',cor(data1$x,data1$y)))
+print(sprintf('R^2: %f',cor(data1$x,data1$y)^2))
+print(sprintf(
+'The proportion of variation in Y accounted for by introducting X into regression model'))
+print(sprintf(' is %f',cor(data1$x,data1$y)^2))
+```
+
+
+
+### 2.42 **Property assessments**. The data that follow show assessed value for property tax purposes ($Υ_1$, in thousand dollars) and sales price ($Y_2$, in thousand dollars) for a sample of $15$ parcels of land for industrial development sold recently in “arm’s length" transactions in a tax district. Assume that bivariate normal model (2.74) is appropriate here.
+#### (a) Plot the data in a scatter diagram. Does the bivariate normal model appear to be appropriate here? Discuss.
+```{r}
+data2 <- read.table("CH02PR42.txt",head=FALSE,col.names = c('Y1','Y2'))
+plot(data2)
+points(rep(min(data2$Y1),length(data2$Y1)),data2$Y2,col='blue',pch=46)
+points(data2$Y1,rep(min(data2$Y2),length(data2$Y2)),col='red',pch=46)
+```
+
+The bivariate normal model is apprpriate because it looks lkie $Y_1$ and $Y_2$ share a high related coefficient $\rho_{12}.$
+
+#### (b) Calculate $r_{12}$. What parameter is estimated by $r_{12}$? What is the interpretation of this parameter?
+$r_{12}=\dfrac{SS_{XY}}{\sqrt{SS_{XX}SS_{YY}}}$ is 
+```{r}
+cor(data2)[1,2]
+```
+$\rho_{12}$ is estimated by $r_{12}$. It is the related coefficient of $Y_1$ and $Y_2$.
+
+#### (c) Test whether or not $Y_1$ and $Y_2$ are statistically independent in the population, using test statistic (2.87) and level of significance $.01$. State the alternatives, decision rule, and conclusion.
+$$H_0:\rho_{12}=0\qquad\qquad H_1:\rho_{12}\neq 0$$
+ \begin{align*}
+t^*&=\dfrac{r_{12}}{\sqrt{\frac{1-r_{12}^2}{n-2}}}\\
+&=\dfrac{b_1}{\sqrt{\frac{MSE}{SS_{XX}}}}\\
+&=\dfrac{b_1}{s\{b_1\}}\overset{H_0}{\sim}t(n-2)
+\end{align*}
+If $|t^*|\leqslant t(1-\frac{\alpha}{2};n-2)$ then conclude $H_0$. Otherwise conclude $H_1$.
+
+Here $t^*=11.322>3.012$, thus conclude $H_1$.
+```{r}
+cor.test(data2$Y1,data2$Y2,conf.level=0.01)
+```
+
+#### (d) To test $\rho_{12}= .6$ versus $\rho_{12}\neq.6$, would it be appropriate to use test statistic (2.87)? 
+No, because the $t$ test is based on $\rho_{12}=0\qquad\Longleftrightarrow\qquad \beta_{12}=\beta_{21}=0$.
+
+## 2.46 Refer to Property assessments Problem 2.42. There is some question as to whether or not bivariate model (2.74) is appropriate. 
+#### (a) Obtain the Spearman rank correlation coefficient $r_s$.
+Rank $(Y_{11},Y_{21},\cdots,Y_{n1})$ from $1$ to $n$ and label $(R_{11},\cdots,R_{n1}).$
+
+Rank $(Y_{12},Y_{22},\cdots,Y_{n2})$ from $1$ to $n$ and label $(R_{12},\cdots,R_{n2}).$
+
+$$r_S=\dfrac{\sum\limits_{i=1}^n(R_{i1}-\overline{R}_1)(R_{i2}-\overline{R}_2)}{\sqrt{\sum\limits_{i=1}^n(R_{i1}-\overline{R}_1)^2\sum\limits_{i=1}^n(R_{i2}-\overline{R}_2)^2}}$$
+```{r}
+cor(data2$Y1,data2$Y2,method = "spearman")
+```
+
+#### (b) Test by means of the Spearman rank correlation coefficient whether an association exists between property assessments and sales prices using test statistic (2.101) with $\alpha =.01$. State the alternatives, decision rule, and conclusion.
+
+To test $$H_0:\text{There is no association between $Y_1$ and $Y_2$}$$ $$H_1:\text{There is an association between $Y_1$ and $Y_2$}$$
+use $$t^*=\dfrac{r_S}{\sqrt{\frac{1-r_S^2}{n-2}}}$$
+If $|t^*|\leqslant t(1-\frac{\alpha}{2};n-2)$, conclude $H_0$. Otherwise conclude $H_1$. 
+
+Here, $r_S=10.46803>3.012276$, conclude $H_1$.
+```{r}
+rs <- cor(data2$Y1,data2$Y2,method = "spearman")
+t2 = rs/sqrt((1-rs^2)/(length(data2$Y1)-2))
+t2
+qt(.995, df=length(data2$Y1)-2)
+```
+
+#### (c) How do your estimates and conclusions in parts (a) and (b) compare to those obtained in Problem 2.42?
+The Pearson's Correlation Test is more precise than Spearman Rank Correlation Test. Pearson Correlation Coefficient only cares about linear relationship while Spearman Rank Correlation Coefficient cases about association between two groups of data.
+
+### 2.53 (Calculus needed.)
+#### (a) Obtain the likelihood function for the sample observations $Y_1,\cdots, Υ_n$, given $X_1 , \cdots, X_n$ the conditions on page 83 apply.
+$\because\quad$
+$$Y_i|X_i=x_i\sim N(\beta_0+\beta_1x_i,\sigma^2)$$
+$\therefore\quad$ \begin{align*}
+L(\beta_0,\beta_1,\sigma^2|X_1,\cdots,X_n,Y_1,\cdots,Y_n)&=f_{Y_1,\cdots,Y_n|X_1,\cdots,X_n}(y_1,\cdots,y_n|x_1,\cdots,x_n)\\
+&=\prod\limits_{i=1}^nf(y_1|x_1)\\
+&=\prod\limits_{i=1}^n\dfrac{1}{(2\pi\sigma^2)^{\frac{1}{2}}}e^{-\frac{1}{2\sigma^2}(y_i-\beta_0-\beta_1x_i)^2}\\
+&=\dfrac{1}{(2\pi\sigma^2)^{\frac{n}{2}}}e^{-\frac{1}{2\sigma^2}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)^2}
+\end{align*}
+
+#### (b) Obtain the maximum likelihood estimators of $\beta_0,\beta_1$ and $\sigma^2$. Are the estimators of $\beta_0$ and $\beta_1$ the same as those in (1.27) when the $X_i$ are fixed?
+$$\ln L=-\frac{n}{2}\ln(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)^2$$
+Let $$\begin{cases}
+\dfrac{\partial \ln L}{\partial \beta_0}=\dfrac{1}{\sigma^2}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)=0       \\
+\dfrac{\partial \ln L}{\partial \beta_1}= \dfrac{1}{\sigma^2}\sum\limits_{i=1}^nx_i(y_i-\beta_0-\beta_1x_i)=0      \\
+\dfrac{\partial \ln L}{\partial \sigma^2}=-\dfrac{n}{2\sigma^2}+\dfrac{1}{2\sigma^4}\sum\limits_{i=1}^n(y_i-\beta_0-\beta_1x_i)^2=0
+\end{cases}$$
+we get $$\begin{cases}
+\hat{\beta_0}=b_0    \\
+\hat{\beta_1}=b_1      \\
+\hat{\sigma^2}=\dfrac{\sum\limits_{i=1}^n(Y_i-\hat{Y_i})^2}{n}
+\end{cases}$$
+It is the same as (1.27).
+
+
+### 2.57 The normal error regression model (2.1) is assumed to be applicable.
+#### (a) When testing $H_0: \beta_1= 5$ versus $H_a:\beta_1\neq 5$ by means of a general linear test, what is the reduced model? What are the degrees of freedom $df_R$?
+The reduced model is $$Y_i=\beta_0+5X_i+\epsilon_i$$
+$$df_{R}=n-1$$
+
+#### (b) When testing $H_0:\beta_0 = 2, \beta_1 = 5$ versus $H_a:$ not both $\beta_0 = 2$ and $\beta_1=5$ by means of a general linear test, what is the reduced model? What are the degrees of freedom $df_R$?
+The reduced model is $$Y_i=2+5X_i+\epsilon_i$$
+$$df_{R}=n$$
+
+### 2.59 (Calculus needed.)
+#### (a) Obtain the maximum likelihood estimators of the parameters of the bivariate normal distribution in (2.74).
+$\because\quad$
+$$f(Y_1,Y_2)=\dfrac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho_{12}^2}}e^{-\frac{1}{2(1-\rho_{12}^2)}\left[\left(\frac{Y_1-\mu_1}{\sigma_1}\right)-2\rho_{12}\left(\frac{Y_1-\mu_1}{\sigma_1}\right)\left(\frac{Y_2-\mu_2}{\sigma_2}\right)+\left(\frac{Y_2-\mu_2}{\sigma_2}\right)^2\right]}$$
+$\therefore\quad$\begin{align*}
+L(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{11},\cdots,y_{n1},y_{12},\cdots,y_{n2})&=\prod\limits_{i=1}^nf(y_{i1},y_{i2})\\
+&=\dfrac{1}{(2\pi\sigma_1\sigma_2)^{n}\sqrt{1-\rho_{12}^2}}e^{-\frac{1}{2(1-\rho_{12}^2)}\sum\limits_{i=1}^n\left[\left(\frac{y_{i1}-\mu_1}{\sigma_1}\right)^2-2\rho_{12}\left(\frac{y_{i1}-\mu_1}{\sigma_1}\right)\left(\frac{y_{i2}-\mu_2}{\sigma_2}\right)+\left(\frac{y_{i2}-\mu_2}{\sigma_2}\right)^2\right]}
+\end{align*}
+
+#### (b) Using the results in part (a), obtain the maximum likelihood estimators of parameters of the conditional probability distribution of $Υ_1$ for any value of $Υ_2$ in (2.80).
+\begin{align*}
+&L_{1|2}(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{11},\cdots,y_{n1}|y_{12},\cdots,y_{n2})\\
+=&\dfrac{L_{12}(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{11},\cdots,y_{n1},y_{12},\cdots,y_{n2})}{L_2(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho_{12};y_{12},\cdots,y_{n2})}\\
+=&\dfrac{1}{(2\pi\sigma^2_{1|2})^{\frac{n}{2}}}e^{-\frac{1}{2}\sum\limits_{i=1}^n\left(\frac{y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2}}{\sigma_{1|2}}\right)^2}
+\end{align*}
+where $$\begin{cases}
+\alpha_{1|2}=\mu_1-\mu_2\rho_{12}\frac{\sigma_1}{\sigma_2}\\
+\beta_{12}=\rho_{12}\frac{\sigma_1}{\sigma_2}\\
+\sigma^2_{1|2}=\sigma_1^2(1-\rho_{12}^2)
+\end{cases}$$
+
+#### (c) Show that the maximum likelihood estimators of $\alpha_{1|2}$ and $\beta_{12}$ obtained in part (b) are the same as the least squares estimators (1.10) for the regression coefficients in the simple linear regression model.
+
+$$\ln L_{1|2}=-\frac{n}{2}\ln(2\pi\sigma^2_{1|2})-\frac{1}{2\sigma_{1|2}^2}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})^2$$
+Let $$\begin{cases}
+\dfrac{\partial\ln L_{1|2}}{\partial \alpha_{1|2}}=\frac{1}{\sigma_{1|2}^2}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})=0\\
+\dfrac{\partial\ln L_{1|2}}{\partial\beta_{12}}=\frac{1}{\sigma_{1|2}^2}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})y_{i2}=0\\
+\dfrac{\partial\ln L_{1|2}}{\partial\sigma^2_{1|2}}=-\frac{n}{2\sigma_{1|2}^2}+\frac{1}{2\sigma_{1|2}^4}\sum\limits_{i=1}^n(y_{i1}-\alpha_{1|2}-\beta_{12}y_{i2})^2=0
+\end{cases}$$
+we get $$\begin{cases}
+\hat{\beta}_{12}=\dfrac{\sum\limits_1^n(Y_{i1}-\overline{Y_1})^2(Y_{i2}-\overline{Y_2})^2}{\sum\limits_1^n(Y_{i2}-\overline{Y_2})^2}\\
+\hat{\alpha}_{1|2}=\overline{Y_1}-\beta_{12}\overline{Y_2}\\
+\hat{\sigma}_{1|2}^2=\dfrac{\sum\limits_{i=1}^n(Y_{i1}-\overline{Y_1})^2}{n}
+\end{cases}$$
+It is the same as the least squares estimators for the regression coefficients in the simple linear regression model. 
+
+### 2.60 Show that test statistics (2.17) and (2.87) are equivalent.
+$$t^*=\dfrac{b_1}{s\{b_1\}}\quad\Longleftrightarrow\quad t^*=\dfrac{r_{12}\sqrt{n-2}}{\sqrt{1-r_{12}^2}}$$
+
+$\because\quad$ $$r_{12}=\dfrac{\sum\limits_{i}^n(Y_{i1}-\overline{Y}_1)(Y_{i2}-\overline{Y}_2)}{\sqrt{\left[\sum\limits_{i}^n(Y_{i1}-\overline{Y}_1)^2\right]\left[\sum\limits_{i}^n(Y_{i2}-\overline{Y}_2)^2\right]}}$$
+Let $Y_{i1}=Y_i,Y_{i2}=X_i$, we have $$r_{12}=\dfrac{\sum\limits_{i}^n(Y_{i}-\overline{Y})(X_{i}-\overline{X})}{\sqrt{\left[\sum\limits_{i}^n(Y_{i}-\overline{Y})^2\right]\left[\sum\limits_{i}^n(X_{i}-\overline{X})^2\right]}}$$
+$\therefore\quad$ \begin{align*}
+b_1&=\dfrac{\sum\limits_{i}^n(Y_{i}-\overline{Y})(X_{i}-\overline{X})}{\sum\limits_{i}^n(X_{i}-\overline{X})^2}\\
+&=r_{12}\left[\dfrac{\sum\limits_{i}^n(Y_{i}-\overline{Y})^2}{\sum\limits_{i}^n(X_{i}-\overline{X})^2}\right]^{\frac{1}{2}}\\
+&=r_{12}\sqrt{\dfrac{SS_{YY}}{SS_{XX}}}\\
+MSE&=\dfrac{SSE}{n-2}\\
+&=\dfrac{SSTO-SSR}{n-2}\\
+&=\dfrac{1}{n-2}(SS_{YY}-b_1^2SS_{XX})\\
+&=\dfrac{(1-r_{12}^2)SS_{YY}}{n-2}\\
+s\{b_1\}&=\sqrt{\dfrac{MSE}{SS_{XX}}}\\
+&=\sqrt{\dfrac{(1-r_{12}^2)SS_{YY}}{(n-2)SS_{XX}}}\\
+t^*&=\dfrac{b_1}{s\{b_1\}}\\
+&=\dfrac{r_{12}\sqrt{n-2}}{\sqrt{1-r_{12}^2}}
+\end{align*}

@@ -1,0 +1,139 @@
+---
+title: "Homework Chapter 9"
+author: "Jinhong Du 15338039"
+output:
+  html_document:
+    code_folding: hide
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+---
+
+### 9.11. Refer to **Job proficiency** Problem 9.10.
+
+#### a. Using only first-order terms for the predictor variables in the pool of potential $X$ variables, find the four best subset regression models according to the $R^2_{a,p}$ criterion.
+```{r}
+data1 <- read.table("CH09PR10.txt",head=FALSE,col.names = c('Y',
+'X1','X2','X3','X4'))
+library(leaps)
+regfit.full = regsubsets(Y~.,data=data1,nbest = 4)
+reg.summary=summary(regfit.full)
+plot(reg.summary$adjr2,xlab="Model",ylab="rdjr2") 
+coef(regfit.full,order(reg.summary$adjr2,decreasing=TRUE)[1:4])
+reg.summary$adjr2[order(reg.summary$adjr2,decreasing=TRUE)[1:4]]
+```
+$$R^2_{a,p}=1-\dfrac{MSE_p}{\frac{SSTO}{n-1}}$$
+
+Top Model|$R^2_{a,p}$
+----|----
+$X_1,X_3,X_4$|0.9560482
+$X_1,X_2,X_3,X_4$|0.9554702
+$X_1,X_3$|0.9269043
+$X_1,X_2,X_3$|0.9246779
+
+#### b. Since there is relatively little difference in $R^2_{a,p}$ for the four best subset models, what other criteria would you use to help in the selection of the best model? Discuss.
+```{r}
+plot(reg.summary$cp,xlab="Model",ylab="cp") 
+coef(regfit.full,order(reg.summary$cp,decreasing=FALSE)[1:4])
+reg.summary$cp[order(reg.summary$cp,decreasing=FALSE)[1:4]]
+```
+
+Top Model|$C_p$
+----|----
+$X_1,X_3,X_4$|3.727399
+$X_1,X_2,X_3,X_4$|5.000000
+$X_1,X_3$|17.112978
+$X_1,X_2,X_3$|18.521465
+
+$C_p$ criteria considers both bias and variance, and estimate $\Gamma_p$. $\mathbb{E}C_p\approx p$ indicates a good model. Therefore, we should choose model $X_1,X_2,X_3,X_4$.
+
+### 9.18. Refer to **Job proficiency** Problems 9.10 and 9.11.
+
+#### a. Using forward stepwise regression, find the best subset of predictor variables to predict job proficiency. Use $\alpha$ limits of $.05$ and $.10$ for adding or deleting a variable, respectively.
+```{r}
+lm.full <- lm(Y~.,data = data1)
+lm.null <- lm(Y ~ 1, data = data1)
+add1(lm.null, ~X1+X2+X3+X4,test='F')
+
+```
+```{r}
+## Now X3 is the least significant and p(X3)<0.05
+drop1(update(lm.null, ~ . +X3), test = "F")
+```
+```{r}
+## Now p(X3)<0.10, no need to drop them.
+add1(update(lm.null, ~ . +X3), scope = ~ X1+X2+X3+X4, test = "F")
+```
+```{r}
+## Now X1 is the least significant and p(X1)<0.05
+drop1(update(lm.null, ~ . +X3+X1), test = "F")
+```
+```{r}
+## Now p(X1)<0.10 and p(X3)<0.10, no need to drop them.
+add1(update(lm.null, ~ . +X3+X1), scope = ~ X1+X2+X3+X4, test = "F")
+```
+```{r}
+## Now X4 is the least significant and p(X4)<0.05
+drop1(update(lm.null, ~ . +X3+X1+X4), test = "F")
+```
+```{r}
+## Now p(X1)<0.10, p(X3)<0.10 and p(X4)<0.10, no need to drop them.
+add1(update(lm.null, ~ . +X3+X1+X4), scope = ~ X1+X2+X3+X4, test = "F")
+```
+```{r}
+## Now X2 is the least significant and p(X2)>0.05, no need to add it.
+## Therefore, no new variables can be entered and no old variables need to be removed. 
+## The regression process stop.
+```
+
+The best model given by forward stepwise regression is $Y\sim\beta_0+\beta_1X_1+\beta_3X_3+\beta_4X_4$
+
+
+#### b. How does the best subset according to forward stepwise regression compare with the best subset according to the $R^2_{a,p}$ criterion obtained in Problem 9.11a?
+It is the same.
+
+### 9.22. Refer to **Job proficiency** Pmblems 9.10 and 9.18. To assess externally the validity of the regression model identified in Problem 9.18. 25 additional applicants for entry-level clerical positions in the agency were similarly tested and hired irrespective of their test scores.
+
+#### b. Fit the regression model identified in Problem 9.18a to the validation data set. Compare the estimated regression coefficients and their estimated standard deviations to those obtained in Problem 9.18a. Also compare the error mean squares and coefficients of multiple determination. Do the estimates for the validation data set appear to be reasonably similar to those obtained for the model-building data set?
+```{r}
+data2 <- read.table("CH09PR22.txt",head=FALSE,col.names = c('Y',
+'X1','X2','X3','X4'))
+lm_val <- lm(Y~X1+X3+X4,data=data2)
+lm_train <- lm(Y~X1+X3+X4,data=data1)
+summary(lm_val)
+summary(lm_train)
+MSE_train <- sum(lm_train$residuals^2)/lm_train$df.residual
+MSE_val <- sum(lm_val$residuals^2)/lm_val$df.residual
+MSE_train
+MSE_val
+lm_train.aov <- anova(lm_train)
+lm_val.aov <- anova(lm_val)
+1 - MSE_train * lm_train$df.residual / sum(lm_train.aov[, 2])
+1 - MSE_val*lm_val$df.residual / sum(lm_val.aov[, 2])
+```
+
+$\ $ |Train|Val
+----|----|----
+$b_0$|-124.20002|-122.76705
+$b_1$|0.29633|0.31238
+$b_3$|1.35697|1.40676
+$b_4$|0.51742|0.42838
+$s\{b_0\}$|9.87406|11.84783
+$s\{b_1\}$|0.04368|0.04729
+$s\{b_3\}$|0.15183|0.23262
+$s\{b_4\}$|0.13105|0.19749
+MSE|16.58081|18.35493
+$R^2$|0.9615422|0.948888
+
+
+#### c. Calculate the mean squared prediction error in (9.20) and compare it to MSE obtained form the model-building date set. Is there evidence of a substantial bias problem in MSE here?
+```{r}
+lm.fit <- lm(Y~X1+X3+X4,data=data1)
+lm.MSE <- sum(lm.fit$residuals^2)/lm.fit$df.residual
+data4 <- data.frame(X1=data2$X1,X4=data2$X3,X5=data2$X4)
+lm.predMSE <- sum((predict(lm.fit,data2)-data2$Y)^2)/length(data2$Y)
+lm.predMSE
+lm.MSE
+```
+The mean squared prediction error in validation set is close to MSE in training set. Therefore, there is no substantial bias problem in MSE here.
+

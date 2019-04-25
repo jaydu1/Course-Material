@@ -1,0 +1,36 @@
+---
+title: "Homework Chapter 11"
+author: "Jinhong Du 15338039"
+output:
+  html_document:
+    code_folding: hide
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+---
+
+### 11.6 **Computer-assisted learning**. Data from a study of computer-assisted learning by 12 students, showing the total number of responses in completing a lesson ($X$) and the cost of computer time ($Y$ in cents), follow.
+$i$ |1    |2    |3    |4    |5    |6    |7    |8    |9    |10   |11   |12
+----|----|----  |----|----  |----|----  |----|----  |----|----  |----|----
+$X_i$|16  |14   |22   |10   |14   |17   |10   |13   |19   |12   |18   |11
+$Y_i$|77  |70   |85   |50   |62   |70   |55   |63   |88   |57   |81   |51
+
+#### c. Plot the absolute values of the residuals against $X$. What does this plot suggest about the relation between the standard deviation of the error term and X?
+```{r}
+
+```
+
+
+#### f. Compare the estimated standard deviations of the weighted least squares estimates $b_{w0}$ and $b_{w1}$ in part (e) with those for the ordinary least squares estimates in part (a). What do you find?
+```{r}
+
+```
+
+  
+#### g. Iterate the steps in parts (d) and (e) one more time. Is there a substantial change in the estimated regression coefficients? If so, what should you do?
+```{r}
+
+```
+
+
+

@@ -1,0 +1,264 @@
+---
+title: "Homework Chapter 8"
+author: "Jinhong Du 15338039"
+output:
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+  html_document:
+    code_folding: hide
+---
+### 8.31. 
+
+#### a. Derive the expressions for $b_0'$, $b_1'$ and $b_{11}'$ in (8.12). $\because\quad$ 
+\begin{align*}
+\hat{Y}&=b_0'+b_1'X'+b_{11}'X^2\\
+&=b_0'+b_1'(X-\overline{X})+b_{11}'(X-\overline{X})^2\\
+&=b_0'+b_1'X-b_1\overline{X}+b_{11}'X^2-2b_{11}'X\overline{X}+b_{11}'\overline{X}^2\\
+&=(b_0'-b_1'\overline{X}+b_{11}'\overline{X}^2)+(b_1'X-2b_{11}'\overline{X}X)+b_{11}'X^2
+\end{align*}
+$\therefore\quad$
+$$\begin{cases}
+b_0'-b_1'\overline{X}+b_{11}'\overline{X}^2=b_0\\
+b_1'X-2b_{11}'\overline{X}X=b_1\\
+b_{11}'=b_{11}
+\end{cases}$$
+$\therefore\quad$
+$$\begin{cases}
+b_0'=b_0-b_1\overline{X}\\
+b_1'=b_1-2b_{11}\overline{X}\\
+b_{11}'=b_{11}
+\end{cases}$$
+
+#### b. Using (5.46). obtain the variance-covariance matrix for the regression coefficients pertaining to the original $X$ variable in terms of the variance-covariance matrix for the regresSion coefficients penaining to the transformed $x$ variable.
+$\because\quad$ the transformed matrix is 
+$$A=\begin{bmatrix}
+1&-\overline{X}&\overline{X}^2\cr
+0&1&-2\overline{X}\cr
+0&0&1
+\end{bmatrix}$$
+$$\sigma^2\{b'\}=A\sigma^2\{b\}A^T$$
+$\therefore\quad$
+$$\begin{cases}
+Var\{b_0'\}=Var\{b_0\}-2\overline{X}Cov\{b_0,b_1\}+\overline{X}^2Var\{b_1\}-2\overline{X}^3Cov\{b_1,b_{11}\}+\overline{X}^4Var\{b_{11}\}\\
+Var\{b_1'\}=Var\{b_1\}-4\overline{X}Cov\{b_1,b_{11}\}+4\overline{X}^2Var\{b_{11}\}\\
+Var\{b_{11}\}&=Var\{b_{11}\}\\
+Cov\{b_0',b_1'\}=Cov\{b_0,b_1\}-2\overline{X}Cov\{b_0,b_{11}\}+3\overline{X}^2Cov\{b_1,b_{11}\}-\overline{X}Var\{b_1\}-2\overline{X}^3Var\{b_{11}\}\\
+Cov\{b_0',b_{11}'\}=Cov\{b_0,b_{11}\}-\overline{X}Cov\{b_1,b_{11}\}+\overline{X}^2Var\{b_{11}\}\\
+Cov\{b_1',b_{11}'\}=Cov\{b_1,b_{11}\}-2\overline{X}Var\{b_{11}\}
+\end{cases}$$
+
+### 8.34. In a regression study, three types of banks were involved, namely, commercial, mutual savings, and savings and loan. Consider the following system of indicator variables for type of bank:
+Type of Bank|$X_2$|$X_3$
+----|----|----
+Commercial|1|0
+Mutual savings|0|1
+Savings and loan|-1|-1
+
+#### a. Develop a first-order linear regression model for relating last year's profit or loss ($Y$) to size of bank ($X_1$) and type of bank ($X_2$, $X_3$).
+$$Y_i=\beta_0+\beta_1X_{i1}+\beta_2X_{i2}+\beta_3X_{i3}+\epsilon_i$$
+where $Y=\begin{pmatrix}
+Y_{1}\cr
+Y_{2}\cr
+\vdots\cr
+Y_{n}
+\end{pmatrix},X_j=\begin{pmatrix}
+X_{1j}\cr
+X_{2j}\cr
+\vdots\cr
+X_{nj}
+\end{pmatrix}$ $\qquad j=1,2,3$
+
+#### b. State the response functions for the three types of banks.
+$$\mathbb{E}_{\text{Commercial}}Y=\beta_0+\beta_1X_{1}+\beta_2$$
+$$\mathbb{E}_{\text{Mutual savings}}Y=\beta_0+\beta_1X_{1}+\beta_3$$
+$$\mathbb{E}_{\text{Savings and loan}}Y=\beta_0+\beta_1X_{1}-\beta_2-\beta_3$$
+
+
+#### c. Interpret each of the following quantities: (1) $\beta_2$, (2) $\beta_3$, (3) $-\beta_2-\beta_3$
+(1) $\beta_2$ shows how much higher (lower) the mean response line is for the type of bank is commercial than it is not, for any given level of $X_1$.
+(2) $\beta_3$ shows how much higher (lower) the mean response line is for the type of bank is mutual savings than it is not, for any given level of $X_1$.
+(3) $-\beta_2-\beta_3$ shows how much higher (lower) the mean response line is for the type of bank is savings and loan than it is not, for any given level of $X_1$.
+
+### 8.35 Refer to regression model (8.54) and exclude variable $X_3$.
+
+#### a Obtain the $X^TX$ matrix for this special case of a single qualitative predictor variable, for $i = 1,\cdots,n$ when $n_1$ firms are not incorporated.
+$$X=\begin{bmatrix}
+1&0\cr
+1&0\cr
+\vdots&\vdots\cr
+1&0\cr
+1&1\cr
+\vdots&\vdots\cr
+1&1
+\end{bmatrix}$$
+$$X^TX=\begin{bmatrix}
+n&n-n_1\cr
+n-n_1&n-n_1
+\end{bmatrix}$$
+$$(X^TX)^{-1}=\begin{bmatrix}
+\frac{1}{n_1}&-\frac{1}{n_1}\cr
+-\frac{1}{n-n_1}&\frac{1}{n-n_1}+\frac{1}{n_1}
+\end{bmatrix}$$
+
+#### b Using (6.25), find $b$.
+$$\overline{Y}_1=\dfrac{1}{n_1}\sum\limits_{i=1}^{n_1}Y_{i}$$
+$$\overline{Y}_2=\dfrac{1}{n-n_1}\sum\limits_{i=n_1+1}^{n}Y_{i}$$
+$$\overline{Y}=\dfrac{1}{n}\sum\limits_{i=1}^{n}Y_{i}$$
+\begin{align*}
+b&=(X^TX)^{-1}X^TY\\
+&=\begin{bmatrix}
+\overline{Y}_1\cr
+\overline{Y}_2-\overline{Y}_1
+\end{bmatrix}
+\end{align*}
+
+
+#### c Using (6.35) and (6.36), find $SSE$ and $SSR$.
+$$H=X(X^TX)^{-1}X^T$$
+\begin{align*}
+SSE&=Y^T(I-H)Y\\
+&=\sum\limits_{i=1}^nY_i^2-n_1\overline{Y}^2-(n-n_1)\overline{Y}^2_2\\
+SSR&=Y^T(H-\frac{1}{n}J)Y\\
+&=n_1\overline{Y}_1^2+(n-n_1)\overline{Y}_2^2-n\overline{Y}^2
+\end{align*}
+
+
+
+### 8.38. Refer to the **SENIC** data set in Appendix C.1. Second-order regression model (8.2) is to be fitted for relating number of nurses ($Y$) to available facilities and services ($X$).
+
+#### a. Fit the second-order regression model. Plot the residuals against the fitted values. How well does the second-order model appear to fit the data?
+```{r}
+data1 <- read.table("APPENC01.txt",head=FALSE,col.names = c('Identification number',
+'Length of stay','Age','Infection risk',
+'Routine culturing ratio','Routine chest X-ray ratio',
+'Number of beds','Medical school affiliation',
+'Region','Average daily census','Y','X'))
+Y <- data1$Y
+X <- data1$X
+fit <- lm('Y~poly(X,2)')
+summary(fit)
+library(ggplot2)
+library(gridExtra)
+
+lm.scatter <- ggplot(data.frame(
+  'FittedValue' = fit$fitted.values,
+  'Residuals' = fit$residuals
+  ), aes(x=FittedValue, y=Residuals)) + 
+  geom_point(color='#2980B9', size = 4)  + 
+  labs(title='Residuals ~ Fitted Value')
+grid.arrange(lm.scatter)
+```
+It doesn't fit the data well since the absolute value of residuals tend to be larger as fitted value increases.
+
+#### b. Obtain $R^2$ for the second-order regression model. Also obtain the coefficient of simple determination for the first-order regression model. Has the addition of the quadratic term in the regression model substantially increased the coefficient of determination?
+```{r}
+fit.aov <- anova(fit)
+R2 <- sum(fit.aov[1,2])/sum(fit.aov[, 2])
+fit1 <- lm('Y~X')
+fit1.aov <- anova(fit1)
+R21 <- sum(fit1.aov[1,2])/sum(fit1.aov[, 2])
+R2
+R21
+```
+For the second-order regression model, $R^2=0.6569396$; For the first-order regression model, $R^2=0.6138809$.
+
+#### c. Test whether the quadratic term can be dropped from the regression model; use $\alpha = .01$. State the alternatives, decision rule, and conclusion.
+```{r}
+F <- ((sum(fit$residuals^2)-sum(fit1$residuals^2)
+       )/(fit$df.residual-fit1$df.residual)
+      )/(sum(fit$residuals^2)/fit$df.residual)
+print(sprintf('F* is %f',F))
+print(sprintf('F(0.99,%d,%d) is %f',fit1$df.residual-fit$df.residual,
+              fit$df.residual,
+              qf(p=0.99,df1=fit1$df.residual-fit$df.residual,
+                 df2=fit$df.residual)))
+```
+
+Full model: $$Y_i=\beta_0+\beta_1 X_i+\beta_2 X^2_i+\epsilon_i$$
+Reduce model: $$Y_i=\beta_0+\beta_1 X_i+\epsilon_i$$
+Given $\alpha$,
+$$H_0:\beta_2=0\qquad H_a:\beta_2\neq 0$$
+$$F^*=\dfrac{\dfrac{SSE_F-SSE_R}{1}}{\dfrac{SSE_F}{n-2}}\overset{H_0}{\sim}F(1,n-3)$$
+The decision rule is 
+
+If $F^*\leqslant F(1-\alpha,1,n-3),$ then conclude $H_0$;
+
+If $F^*> F(1-\alpha,1,n-3),$ then conclude $H_a$;
+
+Here, $F^*=13.806505>6.871028$, therefore, conclude $H_a$.
+
+### 8.41. Refer to the **SENIC** data set in Appendix C.1. Length of stay ($Y$) is to be regressed on age ($X_1$), routine culturing ratio ($X_2$), average daily census ($X_3$). available facilities and services ($X_4$), and region ($X_5,X_6, X_7$).
+
+#### a. Fit a first-order regression model. Let $X_5=1$ if NE and $0$ otherwise, $X_6 =1$ if NC and $0$ otherwise, and $X_7 = 1$ if S and $0$ otherwise.
+```{r}
+data1 <- read.table("APPENC01.txt",head=FALSE,col.names = c('Identification number',
+'Y','X1','Infection risk','X2',
+'Routine chest X-ray ratio','Number of beds',
+'Medical school affiliation','Region','X3',
+'Number of nurses','X4'))
+Y <- data1$Y
+X1 <- data1$X1
+X2 <- data1$X2
+X3 <- data1$X3
+X4 <- data1$X4
+Region <- data1$Region
+fit <- lm('Y~X1+X2+X3+X4+I(Region==1)+I(Region==2)+I(Region==3)')
+summary(fit)
+```
+\begin{align*}
+Y&=2.047830+0.103691X_1+0.040302X^2+0.006600X_3\\
+&-0.020761X_4+2.149988X_5+1.190333X_6+0.633478X_7
+\end{align*}
+
+#### b. Test whether the routine culturing ratio can be dropped from the model; use a level of significance of $.05$. State the alternatives, decision rule, and conclusion.
+```{r}
+fit1 <- lm('Y~X1+X3+X4+I(Region==1)+I(Region==2)+I(Region==3)')
+F <- ((sum(fit$residuals^2)-sum(fit1$residuals^2)
+       )/(fit$df.residual-fit1$df.residual)
+      )/(sum(fit$residuals^2)/fit$df.residual)
+print(sprintf('F* is %f',F))
+print(sprintf('F(0.95,%d,%d) is %f',fit1$df.residual-fit$df.residual,
+              fit$df.residual,
+              qf(p=0.95,df1=fit1$df.residual-fit$df.residual,
+                 df2=fit$df.residual)))
+```
+
+Full model: $$Y_i=\beta_0+\sum\limits_{i=1}^{7}\beta_i X_i+\epsilon_i$$
+Reduce model: $$Y_i=\beta_0+\sum\limits_{\substack{i=1\\i\neq 2}}^{7}\beta_i X_i+\epsilon_i$$
+Given $\alpha$,
+$$H_0:\beta_2=0\qquad H_a:\beta_2\neq 0$$
+$$F^*=\dfrac{\dfrac{SSE_F-SSE_R}{1}}{\dfrac{SSE_F}{n-8}}\overset{H_0}{\sim}F(1,n-8)$$
+The decision rule is 
+
+If $F^*\leqslant F(1-\alpha,1,n-8),$ then conclude $H_0$;
+
+If $F^*> F(1-\alpha,1,n-8),$ then conclude $H_a$;
+
+Here, $F^*=7.939198>3.931556$, therefore, conclude $H_a$.
+
+#### c. Examine whether the effect on length of stay for hospitals located in the western region differs from that for hospitals located in the other three regions by constructing an appropriate confidence interval for each pairwise comparison. Use the Bonferroni procedure with a $95$ percent family confidence coefficient. Summarize your findings.
+```{r}
+n = length(Y)
+b <- as.matrix(fit$coefficients)
+X <- cbind(rep(1,n*1),X1,X2,X3,X4,I(Region==1),I(Region==2),I(Region==3))
+res <- as.matrix(fit$residuals)
+J = matrix(rep(1,n*n),nrow=n,ncol=n)
+SSR <- t(b)%*%crossprod(X,Y) - t(Y)%*%J%*%Y/n
+SSE <- crossprod(Y) - t(b)%*%crossprod(X,Y)
+MSE <- SSE/fit$df.residual
+s2b <- solve(crossprod(X)) * MSE[1,1]
+print(sprintf('sb5=%f',sqrt(s2b[6,6])))
+print(sprintf('sb6=%f',sqrt(s2b[7,7])))
+print(sprintf('sb7=%f',sqrt(s2b[8,8])))
+B <- qt(1-0.05/(2 * 3), fit$df.residual)
+print(sprintf("B = %f",B))
+print(sprintf("The confidence interval for beta5 is (%f,%f)",
+              b[6]-B*sqrt(s2b[6,6]),b[6]+B*sqrt(s2b[6,6])))
+print(sprintf("The confidence interval for beta6 is (%f,%f)",
+              b[7]-B*sqrt(s2b[7,7]),b[7]+B*sqrt(s2b[7,7])))
+print(sprintf("The confidence interval for beta7 is (%f,%f)",
+              b[8]-B*sqrt(s2b[8,8]),b[8]+B*sqrt(s2b[8,8])))
+```
+$\beta_5,\beta_6$ and $\beta_7$ tends to be positive, which means that whether it is located in region $NE$ or $NC$ or $S$ have effect to $Y$. $\beta_6=\beta_6=\beta_7=0$ indicates the region is $W$. Therefore, the effect on length of stay for hospitals located in the western region differs from that for hospitals located in the other three regions.
+
